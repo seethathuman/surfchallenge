@@ -547,7 +547,7 @@
               caught: !1,
               highScore: !1,
               cheat: {
-                // used: !1,
+                used: !1,
                 lives: !1,
                 boosts: !1,
                 safety: !1,
