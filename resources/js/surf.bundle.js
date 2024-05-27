@@ -2776,13 +2776,13 @@
             this.showPauseScreen(),
               this.selector.style.removeProperty("visibility");
           }
-          sendNotification(e, t = 5e3) {
+          sendNotification(e, t = 5e3) { // Bottom Notification
             const s = te.sys.session.settings.mode,
               i = te.sys.session.settings.theme;
             switch (((this.notifyContent.textContent = ""), e)) {
               case "mode":
                 this.notifyContent.textContent = Z.pz.getStringF(
-                  "gameMode",
+                  "theme",
                   Z.pz.getString(s + "Title")
                 );
                 break;
