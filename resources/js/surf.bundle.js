@@ -2783,8 +2783,8 @@
               case "mode":
                 this.notifyContent.textContent = Z.pz.getStringF(
                   "theme",
-                  Z.pz.getString(s + "Title")
                 );
+                Z.pz.getString(s + "Title")
                 this.notifyContent.textContent = "Test";
                 break;
               case "theme":
