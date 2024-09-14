@@ -690,7 +690,7 @@
               zigzag_bestScore: -1,
               timetrial_bestScore: -1,
               currentCharacter: 1,
-              theme: new Date().getMonth() === 11 ? "ski" : "surf",
+              theme: "ski",
               mode: "endless",
               highVisibilityMode: false,
               reducedSpeedMode: false,
@@ -10585,7 +10585,7 @@
                     d: "M9.1 2.9a1 1 0 011.8 0l1.93 3.91 4.31.63a1 1 0 01.56 1.7l-3.13 3.05.74 4.3a1 1 0 01-1.45 1.05L10 15.51l-3.86 2.03a1 1 0 01-1.45-1.05l.74-4.3L2.3 9.14a1 1 0 01.56-1.7l4.31-.63L9.1 2.9z",
                   })
                 )),
-                Z.pz.getStringF("bestScoreFlyout", e)
+                Z.pz.getStringF("bestScoreFlyout", e) // note to self
               ),
               a.createElement(P.iz, {
                 className:
