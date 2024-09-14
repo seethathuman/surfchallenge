@@ -2784,8 +2784,8 @@
                 this.notifyContent.textContent = Z.pz.getStringF(
                   "theme",
                   Z.pz.getString(s + "Title")
-                this.notifyContent.textContent = "Test"
                 );
+                this.notifyContent.textContent = "Test";
                 break;
               case "theme":
                 this.notifyContent.textContent = Z.pz.getStringF(
