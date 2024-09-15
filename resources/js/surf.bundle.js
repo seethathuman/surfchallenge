@@ -486,8 +486,8 @@
           getCurrentScore() {
             switch (this.session.settings.mode) {
               case q.Endless:
-                return this.game.dist.unit;
-                // return Math.floor(this.game.dist.unit);
+                // return this.game.dist.unit;
+                return Math.floor(this.game.dist.unit);
               case q.TimeTrial:
                 return this.game.time.elapsed - 2 * this.game.coins;
               case q.ZigZag:
@@ -691,7 +691,7 @@
               zigzag_bestScore: -1,
               timetrial_bestScore: -1,
               currentCharacter: 1,
-              theme: "ski",
+              theme: "surf",
               mode: "endless",
               highVisibilityMode: false,
               reducedSpeedMode: false,
@@ -2871,7 +2871,7 @@
               );
             } else {
               const t = te.sys.getCurrentScoreFormatted();
-              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit");
+              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit"); // display score???
             }
           }
           updateIcons() {
