@@ -1,4 +1,4 @@
-sloadTimeData.data = {
+loadTimeData.data = {
   bestScore: "Best $1 $2 $3",
   bestScoreFlyout: "Best score: $1",
   bestScoreMenuDisplay: "$1 $2",
