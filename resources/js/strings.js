@@ -1,4 +1,4 @@
-loadTimeData.data = {
+sloadTimeData.data = {
   bestScore: "Best $1 $2 $3",
   bestScoreFlyout: "Best score: $1",
   bestScoreMenuDisplay: "$1 $2",
@@ -11,7 +11,7 @@ loadTimeData.data = {
   endlessDescriptor: "distance",
   endlessModeTitleInline: "Endless:",
   endlessTitle: "Endless",
-  endlessUnit: "m",
+  endlessUnit: "meters",
   fontfamily: "system-ui, sans-serif",
   fontsize: "75%",
   gameCreditsButton: "Game credits",
