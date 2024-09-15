@@ -486,7 +486,8 @@
           getCurrentScore() {
             switch (this.session.settings.mode) {
               case q.Endless:
-                return Math.floor(this.game.dist.unit);
+                return this.game.dist.unit;
+                // return Math.floor(this.game.dist.unit);
               case q.TimeTrial:
                 return this.game.time.elapsed - 2 * this.game.coins;
               case q.ZigZag:
