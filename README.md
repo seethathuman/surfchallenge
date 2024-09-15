@@ -8,7 +8,7 @@ The *Let's Surf* game from ``edge://surf``
 The game is created by Microsoft – please see the **Credits** in the game menu for more information. The files in this repo are from Microsoft Edge; however, some of them have been modified so the game can function independently from Edge.
 
 ## Play
-Play the game online at https://surf.jackbuehner.com
+Play the game online at [https://surf.jackbuehner.com](https://seethathuman.github.io/surfchallenge/)
 
 ### Features
 - Endless mode: Surf as far as you can while avoiding obstacles and the kraken. You can switch modes via the game settings menu.
