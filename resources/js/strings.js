@@ -4,6 +4,7 @@ loadTimeData.data = {
   bestScoreMenuDisplay: "$1 $2",
   cancel: "Cancel",
   close: "Close",
+  codebig: "BIG mode activated",
   code: "Invisible mode for Surf activated!",
   codeCheat: "Cheat code activated! $1",
   codeScoring: "Scoring turned off for this round.",
