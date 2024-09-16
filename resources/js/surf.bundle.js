@@ -1012,7 +1012,6 @@
             const playerSheet = be.sys.sheet.player;
             // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
             const poseData = te.sys.game.caught ? playerSheet.poseData.end : playerSheet.poseData[poseIndex];
-            console.log(poseIndex);
             // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
             const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
             // Draw the player sprite using the calculated frame and pose data
@@ -7977,7 +7976,7 @@
                 Math.floor(s) +
                 (te.sys.game.dist.y - Math.floor(te.sys.game.dist.y)));
             let a = this.wake(e, t, s, i);
-            switch ((a || (a = this.createObject(e, t, s, i)), a.type)) {
+            switch ((a || (a = this.createObject(e, t, s, i)), a.type)) { // level gen
               case "wall":
                 !["f1", "f2", "f3"].includes(i) &&
                   Math.random() < 0.5 &&
@@ -8261,7 +8260,7 @@
               i = e.axes[0] < -0.5 || e.axes[2] < -0.5, // left
               a = e.axes[1] > t , // down
               o = e.axes[1] < -0.5 ; // up
-            console.log("axis1: " + e.axes[1] + ", axis2: " + e.axes[2] + "axis3: " + e.axes[3] + ", axis4: " + e.axes[4])
+            console.log("axis0: " + e.axes[0] + ", axis1: " + e.axes[1] + ", axis2: " + e.axes[2] + "axis3: " + e.axes[3] + ", axis4: " + e.axes[4]);
             let n;
             if (
               (s || i || o || a
@@ -9382,6 +9381,7 @@
             if (te.sys.session.state !== Q.Menu) return;
             const s =
               t === ee.Keyboard ? this.codes.keyboard : this.codes.directional;
+            console.log(this.codesPossible);
             (this.codesPossible = this.codesPossible.filter(
               (t) => e === s[t.idx][t.pos]
             )),
