@@ -8348,9 +8348,11 @@
                     break;
                 case "lb":
                     buttonAction = He.Boost;
+                    Ae.sys.routeInput(He.Boost, !1, !1)
                     break;
                 case "rb":
                     buttonAction = He.Boost;
+                    Ae.sys.routeInput(He.Boost, !1, !1)
                     break;
                 case "up":
                     buttonAction = He.Stop; // up mapped to stop
@@ -9024,7 +9026,7 @@
               window.addEventListener("keyup", (e) => De.sys.onKeyup(e), !1),
               (this.pressed = {});
           }
-          onKeydown(e) {
+          onKeydown(e) { // keyboard magic
             const t = e.key.toLowerCase();
             if ((Ae.sys.changeInputMethod(ee.Keyboard), !this.pressed[t])) {
               switch (((this.pressed[t] = !0), t)) {
