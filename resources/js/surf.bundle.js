@@ -9381,7 +9381,6 @@
             if (te.sys.session.state !== Q.Menu) return;
             const s =
               t === ee.Keyboard ? this.codes.keyboard : this.codes.directional;
-            console.log(this.codesPossible);
             (this.codesPossible = this.codesPossible.filter(
               (t) => e === s[t.idx][t.pos]
             )),
@@ -9393,6 +9392,7 @@
                     pos: 0,
                   });
                 }),
+              console.log("codes: " + s + e);
               this.codesPossible.some((e) => {
                 if ((e.pos++, e.pos === s[e.idx].length)) {
                   let t = "code";
