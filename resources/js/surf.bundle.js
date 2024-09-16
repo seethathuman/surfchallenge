@@ -8349,6 +8349,9 @@
                 case "lb":
                     buttonAction = He.Boost;
                     Ae.sys.routeInput(He.Boost, !1, !1)
+                    Ae.sys.routeInput(He.Boost, 1, !1)
+                    Ae.sys.routeInput(He.Boost, !1, 1)
+                    Ae.sys.routeInput(He.Boost, !0, !0)
                     break;
                 case "rb":
                     buttonAction = He.Boost;
