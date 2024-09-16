@@ -8196,12 +8196,12 @@
             if (e === ee.Xbox || e === ee.Ps) {
               const e = this.vibCurrent,
                 t = this.timer / e.dur;
-              this.linkedPad.pad.vibrationActuator.playEffect("dual-rumble", {
+              /* this.linkedPad.pad.vibrationActuator.playEffect("dual-rumble", {
                 startDelay: 0,
                 duration: e.dur,
                 weakMagnitude: t * e.weak,
                 strongMagnitude: t * e.strong,
-              });
+              }); */ // fix some controller errors
             }
           }
           onGamepadConnected(e) {
