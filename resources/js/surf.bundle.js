@@ -8086,7 +8086,7 @@
           );
         }
         Ce(ke, "sys", null);
-        class Me {
+        class Me { // controller logic
           constructor() {
             if (
               (Te(this, "indexList", void 0),
@@ -8120,7 +8120,7 @@
                 "start",
                 "lstick",
                 "rstick",
-                "up",
+                "stop",
                 "down",
                 "left",
                 "right",
@@ -9376,7 +9376,7 @@
             te.sys.session.state === Q.Play && Ze.sys.changeGameState(Q.Pause),
               document.dispatchEvent(new CustomEvent(lt));
           }
-          checkCheatCode(e) {
+          checkCheatCode(e) { // check cheat code
             const t = te.sys.session.inputType;
             if (te.sys.session.state !== Q.Menu) return;
             const s =
@@ -9406,7 +9406,7 @@
                       this.cheat("safety"), (t = "cheatcode");
                       break;
                     case 3:
-                      ze.sys.changeCharacter(7, !0);
+                      ze.sys.changeCharacter(7, !0); // NINJA CAT
                       break;
                     case 4:
                       ze.sys.scale = 2;
