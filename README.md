@@ -1,9 +1,5 @@
 # Microsoft Edge's *Let's Surf*
-The *Let's Surf* game from ``edge://surf``
-
-<p align="center">
-  <img src="https://i.imgur.com/9ybOdy7.png"/>
-</p>
+An improvement to the game *Let's Surf* from ``edge://surf``
 
 The game is created by Microsoft – please see the **Credits** in the game menu for more information. The files in this repo are from Microsoft Edge; however, some of them have been modified so the game can function independently from Edge.
 
