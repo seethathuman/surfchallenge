@@ -2825,6 +2825,9 @@
               case "code":
                 this.notifyContent.textContent = Z.pz.getString("code");
                 break;
+              case "codebig":
+                this.notifyContent.textContent = Z.pz.getString("codebig");
+                break;
               case "cheat":
                 this.notifyContent.textContent = Z.pz.getString("codeScoring");
                 break;
