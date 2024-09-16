@@ -8120,7 +8120,7 @@
                 "start",
                 "lstick",
                 "rstick",
-                "stop",
+                "up",
                 "down",
                 "left",
                 "right",
