@@ -9423,6 +9423,7 @@
                       break;
                     case 4:
                       ze.sys.scale = 2;
+                      t = "codebig";
                   }
                   ue.sys.sendNotification(t);
                 }
