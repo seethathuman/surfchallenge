@@ -8254,121 +8254,138 @@
             const t = e.id.toLowerCase().includes("054c") ? ee.Ps : ee.Xbox;
             Ae.sys.changeInputMethod(t);
           }
-          checkJoysticks(e) {
-            const t = 0.5,
-              s = e.axes[0] > t || e.axes[2] > t, // right
-              i = e.axes[0] < -0.5 || e.axes[2] < -0.5, // left
-              a = e.axes[1] > t , // down
-              o = e.axes[1] < -0.5 ; // up
-            console.log("axis0: " + e.axes[0] + ", axis1: " + e.axes[1] + ", axis2: " + e.axes[2] + "axis3: " + e.axes[3] + ", axis4: " + e.axes[4]);
-            let n;
-            if (
-              (s || i || o || a
-                ? (this.changeControllerType(e),
-                  !o || s || i
-                    ? !a || s || i
-                      ? !i || o || a
-                        ? !s || o || a
-                          ? s && o
-                            ? (n = He.Right)
-                            : s && a
-                            ? (n = He.DownRight)
-                            : i && o
-                            ? (n = He.Left)
-                            : i && a && (n = He.DownLeft)
-                          : (n = He.Right)
-                        : (n = He.Left)
-                      : (n = He.Down)
-                    : (n = He.Stop))
-                : (this.last = void 0),
-              this.last !== n)
-            ) {
-              if (((this.last = n), n))
-                if (te.sys.session.flyoutActive)
-                  switch (n) {
-                    case He.Stop:
-                      this.focusNextElement(-1);
-                      break;
-                    case He.Down:
-                      this.focusNextElement(1);
-                  }
-                else Ae.sys.routeInput(n, !0, !1);
-              return n;
+          checkJoysticks(gamepad) {
+    const threshold = 0.5;
+    
+    const right = gamepad.axes[0] > threshold || gamepad.axes[2] > threshold; // right
+    const left = gamepad.axes[0] < -threshold || gamepad.axes[2] < -threshold; // left
+    const down = gamepad.axes[1] > threshold; // down
+    const up = gamepad.axes[1] < -threshold; // up
+
+    console.log(`Axes values - axis0: ${gamepad.axes[0]}, axis1: ${gamepad.axes[1]}, axis2: ${gamepad.axes[2]}, axis3: ${gamepad.axes[3]}, axis4: ${gamepad.axes[4]}`);
+
+    let direction = null;
+    
+    if (right || left || up || down) {
+        this.changeControllerType(gamepad);
+
+        if (up && !right && !left) {
+            direction = He.Stop; // Up is mapped to "Stop"
+        } else if (down && !right && !left) {
+            direction = He.Down;
+        } else if (left && !up && !down) {
+            direction = He.Left;
+        } else if (right && !up && !down) {
+            direction = He.Right;
+        }
+
+        // Check for cheat code input when a direction is detected
+        if (direction) {
+            Ae.sys.checkCheatCode(direction);
+        }
+
+        if (this.last !== direction) {
+            this.last = direction;
+
+            if (direction) {
+                if (te.sys.session.flyoutActive) {
+                    switch (direction) {
+                        case He.Stop:
+                            this.focusNextElement(-1);
+                            break;
+                        case He.Down:
+                            this.focusNextElement(1);
+                    }
+                } else {
+                    Ae.sys.routeInput(direction, true, false);
+                }
             }
-          }
-          checkButtons(e) {
-            function t(e) {
-              return "object" == typeof e ? e.pressed : 1 === e;
-            }
-            if (t(e.buttons[4]) && t(e.buttons[5]))
-              return (
-                Ae.sys.routeInput(He.Reset),
-                (this.linkedPad.pressed.lb = !0),
-                void (this.linkedPad.pressed.rb = !0)
-              );
-            let s;
-            const i = e.buttons.length;
-            for (let a = 0; a < i; a++)
-              if (t(e.buttons[a])) {
-                if (this.linkedPad.pressed[this.buttonMap[a]]) return;
-                if (
-                  ((this.linkedPad.pressed[this.buttonMap[a]] = !0),
-                  this.changeControllerType(e),
-                  te.sys.session.flyoutActive &&
-                    ["a", "b", "up", "down"].includes(this.buttonMap[a]))
-                ) {
-                  switch (this.buttonMap[a]) {
+        }
+    } else {
+        this.last = undefined;
+    }
+
+    return direction;
+}
+
+          checkButtons(gamepad) {
+    const isPressed = (button) => typeof button === 'object' ? button.pressed : button === 1;
+
+    if (isPressed(gamepad.buttons[4]) && isPressed(gamepad.buttons[5])) {
+        Ae.sys.routeInput(He.Reset);
+        this.linkedPad.pressed.lb = true;
+        this.linkedPad.pressed.rb = true;
+        return;
+    }
+
+    let buttonAction = null;
+    const totalButtons = gamepad.buttons.length;
+
+    for (let i = 0; i < totalButtons; i++) {
+        if (isPressed(gamepad.buttons[i])) {
+            if (this.linkedPad.pressed[this.buttonMap[i]]) return;
+
+            this.linkedPad.pressed[this.buttonMap[i]] = true;
+            this.changeControllerType(gamepad);
+
+            if (te.sys.session.flyoutActive && ["a", "b", "up", "down"].includes(this.buttonMap[i])) {
+                switch (this.buttonMap[i]) {
                     case "a":
-                      document.activeElement.click();
-                      break;
+                        document.activeElement.click();
+                        break;
                     case "b":
-                      Ae.sys.routeInput(He.Settings, !1, !1);
-                      break;
+                        Ae.sys.routeInput(He.Settings, false, false);
+                        break;
                     case "up":
-                      this.focusNextElement(-1);
-                      break;
+                        this.focusNextElement(-1);
+                        break;
                     case "down":
-                      this.focusNextElement(1);
-                  }
-                  return;
+                        this.focusNextElement(1);
                 }
-                switch (this.buttonMap[a]) {
-                  case "a":
-                    s = He.Toggle;
+                return;
+            }
+
+            switch (this.buttonMap[i]) {
+                case "a":
+                    buttonAction = He.Toggle;
                     break;
-                  case "lb":
-                    s = He.Left;
+                case "lb":
+                    buttonAction = He.Left;
                     break;
-                  case "rb":
-                    s = He.Right;
+                case "rb":
+                    buttonAction = He.Right;
                     break;
-                  case "lt":
-                  case "rt":
-                    s = He.Boost;
+                case "up":
+                    buttonAction = He.Stop; // up mapped to stop
                     break;
-                  case "up":
-                    s = He.Stop;
+                case "down":
+                    buttonAction = He.Down;
                     break;
-                  case "down":
-                    s = He.Down;
+                case "left":
+                    buttonAction = He.Left;
                     break;
-                  case "left":
-                    s = He.Left;
+                case "right":
+                    buttonAction = He.Right;
                     break;
-                  case "right":
-                    s = He.Right;
+                case "select":
+                case "start":
+                case "home":
+                case "touchpad":
+                    buttonAction = He.Settings;
                     break;
-                  case "select":
-                  case "start":
-                  case "home":
-                  case "touchpad":
-                    s = He.Settings;
-                }
-                console.log("button pressed: " + s)
-                Ae.sys.routeInput(s, !1, !1), Ae.sys.checkCheatCode(s);
-              } else this.linkedPad.pressed[this.buttonMap[a]] = !1;
-            return s;
-          }
+            }
+
+            console.log("Button pressed: " + buttonAction);
+
+            Ae.sys.routeInput(buttonAction, false, false);
+            Ae.sys.checkCheatCode(buttonAction);
+        } else {
+            this.linkedPad.pressed[this.buttonMap[i]] = false;
+        }
+    }
+
+    return buttonAction;
+}
           focusNextElement(e = 1) {
             const t = Array.from(
                 document.querySelectorAll(
