@@ -8256,56 +8256,50 @@
           }
           checkJoysticks(gamepad) {
     const threshold = 0.5;
-    
     const right = gamepad.axes[0] > threshold || gamepad.axes[2] > threshold; // right
     const left = gamepad.axes[0] < -threshold || gamepad.axes[2] < -threshold; // left
     const down = gamepad.axes[1] > threshold; // down
     const up = gamepad.axes[1] < -threshold; // up
 
-    console.log(`Axes values - axis0: ${gamepad.axes[0]}, axis1: ${gamepad.axes[1]}, axis2: ${gamepad.axes[2]}, axis3: ${gamepad.axes[3]}, axis4: ${gamepad.axes[4]}`);
+    let inputDirection;
 
-    let direction = null;
-    
     if (right || left || up || down) {
+        // Check for controller type if any direction is pressed
         this.changeControllerType(gamepad);
 
-        if (up && !right && !left) {
-            direction = He.Stop; // Up is mapped to "Stop"
-        } else if (down && !right && !left) {
-            direction = He.Down;
-        } else if (left && !up && !down) {
-            direction = He.Left;
-        } else if (right && !up && !down) {
-            direction = He.Right;
-        }
-
-        // Check for cheat code input when a direction is detected
-        if (direction) {
-            Ae.sys.checkCheatCode(direction);
-        }
-
-        if (this.last !== direction) {
-            this.last = direction;
-
-            if (direction) {
-                if (te.sys.session.flyoutActive) {
-                    switch (direction) {
-                        case He.Stop:
-                            this.focusNextElement(-1);
-                            break;
-                        case He.Down:
-                            this.focusNextElement(1);
-                    }
-                } else {
-                    Ae.sys.routeInput(direction, true, false);
-                }
-            }
-        }
+        if (up && right) inputDirection = He.UpRight;
+        else if (up && left) inputDirection = He.UpLeft;
+        else if (down && right) inputDirection = He.DownRight;
+        else if (down && left) inputDirection = He.DownLeft;
+        else if (right) inputDirection = He.Right;
+        else if (left) inputDirection = He.Left;
+        else if (up) inputDirection = He.Up;
+        else if (down) inputDirection = He.Down;
     } else {
-        this.last = undefined;
+        // Reset if no direction is pressed
+        this.lastDirection = undefined;
     }
 
-    return direction;
+    // Register direction change only if it's a new input
+    if (inputDirection && this.lastDirection !== inputDirection) {
+        this.lastDirection = inputDirection;
+
+        if (te.sys.session.flyoutActive) {
+            switch (inputDirection) {
+                case He.Up:
+                    this.focusNextElement(-1);
+                    break;
+                case He.Down:
+                    this.focusNextElement(1);
+                    break;
+            }
+        } else {
+            Ae.sys.routeInput(inputDirection, true, false);
+            Ae.sys.checkCheatCode(inputDirection); // Check for cheat code
+        }
+
+        return inputDirection;
+    }
 }
 
           checkButtons(gamepad) {
