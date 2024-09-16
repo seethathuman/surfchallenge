@@ -8257,10 +8257,12 @@
           }
           checkJoysticks(e) {
             const t = 0.5,
-              s = e.axes[0] > t || e.axes[2] > t,
-              i = e.axes[0] < -0.5 || e.axes[2] < -0.5,
-              a = e.axes[1] > t || e.axes[3] > t,
-              o = e.axes[1] < -0.5 || e.axes[3] < -0.5;
+              s = e.axes[0] > t || e.axes[2] > t, // right
+              i = e.axes[0] < -0.5 || e.axes[2] < -0.5, // left
+              a = e.axes[1] > t || e.axes[3] > t, // down
+              o = e.axes[1] < -0.5 || e.axes[3] < -0.5; // up
+            console.log("up:" + o)
+            console.log("down:" + a)
             let n;
             if (
               (s || i || o || a
