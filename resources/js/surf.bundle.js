@@ -8259,11 +8259,9 @@
             const t = 0.5,
               s = e.axes[0] > t || e.axes[2] > t, // right
               i = e.axes[0] < -0.5 || e.axes[2] < -0.5, // left
-              a = e.axes[1] > t || e.axes[3] > t, // down
-              o = e.axes[1] < -0.5 || e.axes[3] < -0.5; // up
-            console.log("up:" + o)
-            console.log("down:" + a)
-            console.log("axis1: " + e.axes[1] + ", axis3: " + e.axes[3])
+              a = e.axes[1] > t , // down
+              o = e.axes[1] < -0.5 ; // up
+            console.log("axis1: " + e.axes[1] + ", axis2: " + e.axes[2] + "axis3: " + e.axes[3] + ", axis4: " + e.axes[4])
             let n;
             if (
               (s || i || o || a
