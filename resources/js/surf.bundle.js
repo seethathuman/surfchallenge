@@ -1006,22 +1006,29 @@
               o = Math.floor(e * i.fps) % a.length;
             this.draw(pe.sys.objectsImg, i, t, s, a[o]);
           }
-          drawPlayerSprite(e, t = 0, s = 0, i = 0, a = 1) {
-            const o = be.sys.sheet.player,
-              n = te.sys.game.caught ? o.poseData.end : o.poseData[e],
-              r = Math.floor(t * o.fps) % 3;
+          
+          drawPlayerSprite(poseIndex, timeElapsed = 0, xPos = 0, yPos = 0, scale = 1) {
+            // Retrieve player sprite sheet data
+            const playerSheet = be.sys.sheet.player;
+            // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
+            const poseData = te.sys.game.caught ? playerSheet.poseData.end : playerSheet.poseData[poseIndex];
+            console.log(poseIndex);
+            // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
+            const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
+            // Draw the player sprite using the calculated frame and pose data
             this.drawScaled(
-              be.sys.playerSprite,
-              o,
-              s,
-              i,
+              be.sys.playerSprite,  // The actual sprite image
+              playerSheet,          // The player sprite sheet containing frame data
+              xPos,                 // X-coordinate where the sprite is drawn
+              yPos,                 // Y-coordinate where the sprite is drawn
               {
-                x: n,
-                y: o.mount[r],
+                x: poseData,        // X position of the current pose in the sprite sheet
+                y: playerSheet.mount[frameIndex]  // Y position of the current frame in the sprite sheet
               },
-              a
+              scale                 // Scale factor for resizing the sprite
             );
           }
+          
           drawPlayerMenu(e, t, s = 0, i = 0, a = 1) {
             const o = be.sys.sheet.player,
               n = o.character[e],
