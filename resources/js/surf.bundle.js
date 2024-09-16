@@ -8347,10 +8347,10 @@
                     buttonAction = He.Toggle;
                     break;
                 case "lb":
-                    buttonAction = He.Left;
+                    buttonAction = He.Boost;
                     break;
                 case "rb":
-                    buttonAction = He.Right;
+                    buttonAction = He.Boost;
                     break;
                 case "up":
                     buttonAction = He.Stop; // up mapped to stop
