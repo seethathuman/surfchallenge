@@ -8263,6 +8263,7 @@
               o = e.axes[1] < -0.5 || e.axes[3] < -0.5; // up
             console.log("up:" + o)
             console.log("down:" + a)
+            console.log("axis1: " + e.axes[1] + ", axis3: " + e.axes[3])
             let n;
             if (
               (s || i || o || a
