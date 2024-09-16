@@ -8364,6 +8364,7 @@
                   case "touchpad":
                     s = He.Settings;
                 }
+                console.log("button pressed: " + s)
                 Ae.sys.routeInput(s, !1, !1), Ae.sys.checkCheatCode(s);
               } else this.linkedPad.pressed[this.buttonMap[a]] = !1;
             return s;
