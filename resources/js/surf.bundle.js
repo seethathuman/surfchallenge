@@ -8273,7 +8273,7 @@
         else if (down && left) inputDirection = He.DownLeft;
         else if (right) inputDirection = He.Right;
         else if (left) inputDirection = He.Left;
-        else if (up) inputDirection = He.Up;
+        else if (up) inputDirection = He.Stop;
         else if (down) inputDirection = He.Down;
     } else {
         // Reset if no direction is pressed
