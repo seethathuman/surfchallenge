@@ -8367,8 +8367,10 @@
                     Ae.sys.routeInput(He.Toggle);
                     break;
                   case "lb":
+                  case "lt":
                     Ae.sys.routeInput(He.Boost, !1, !1);
                     break;
+                  case "rt":
                   case "rb":
                     Ae.sys.routeInput(He.Boost, !1, !1);
                     break;
