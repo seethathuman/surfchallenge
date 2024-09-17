@@ -8381,10 +8381,10 @@
                     Ae.sys.routeInput(He.Down);
                     break;
                   case "left":
-                    Ae.sys.routeInput(He.Left, !1, !1);
+                    Ae.sys.routeInput(He.Left);
                     break;
                   case "right":
-                    Ae.sys.routeInput(He.Right, !1, !1);
+                    Ae.sys.routeInput(He.Right);
                     break;
                   case "select":
                   case "start":
