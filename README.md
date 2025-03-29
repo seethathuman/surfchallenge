@@ -1,5 +1,5 @@
 # Microsoft Edge's *Let's Surf*
-An improvement to the game *Let's Surf* from ``edge://surf``
+An improvement to the game *Let's Surf* from ``edge://surf`` with controller support and an invisibillity mode
 
 The game is created by Microsoft – please see the **Credits** in the game menu for more information. The files in this repo are from Microsoft Edge; however, some of them have been modified so the game can function independently from Edge or for bug fixes.
 
