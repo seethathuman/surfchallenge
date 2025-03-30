@@ -75,13 +75,13 @@
               fill: "currentColor",
             },
             settingsHamburgerMenu_closeButton: {
-              ...(0, u.b)(l.fn, b.k8, b.k8),
+              ...u.b(l.fn, b.k8, b.k8),
               position: "absolute",
               top: "0",
               margin: "6px",
-              [(0, d.Ih)("right", "left", l.fn.direction)]: "0",
+              [d.Ih("right", "left", l.fn.direction)]: "0",
               "& $settingsHamburgerMenu_closeButton_icon": {
-                ...(0, g.Zb)(),
+                ...g.Zb(),
               },
             },
             settingsHamburgerMenu_closeButton_icon: {},
@@ -275,9 +275,9 @@
             t in e
               ? Object.defineProperty(e, t, {
                   value: s,
-                  enumerable: !0,
-                  configurable: !0,
-                  writable: !0,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
                 })
               : (e[t] = s),
             e
@@ -1007,7 +1007,7 @@
               o = Math.floor(e * i.fps) % a.length;
             this.draw(pe.sys.objectsImg, i, t, s, a[o]);
           }
-
+          // Draw player
           drawPlayerSprite(
             poseIndex,
             timeElapsed = 0,
@@ -7609,21 +7609,7 @@
                 counter: 0,
                 clusterList: [
                   "start",
-                  "intro",
-                  "act1a",
-                  "act1b",
-                  "act2a",
-                  "act2b",
-                  "act3a",
-                  "act3b",
-                  "act4a",
-                  "act4b",
-                  "act5a",
-                  "act5b",
-                  "act6a",
-                  "act6b",
-                  "act7a",
-                  "act7b",
+
                   "finish",
                 ],
               }),
@@ -8979,7 +8965,7 @@
             }
             a.restore();
           }
-          draw() {
+          draw() { // Draw game
             if (
               (this.boostFx.length > 0 && de.sys.drawBoost(this.boostFx),
               this.swapped)
