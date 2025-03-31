@@ -75,13 +75,13 @@
               fill: "currentColor",
             },
             settingsHamburgerMenu_closeButton: {
-              ...(0, u.b)(l.fn, b.k8, b.k8),
+              ...u.b(l.fn, b.k8, b.k8),
               position: "absolute",
               top: "0",
               margin: "6px",
-              [(0, d.Ih)("right", "left", l.fn.direction)]: "0",
+              [d.Ih("right", "left", l.fn.direction)]: "0",
               "& $settingsHamburgerMenu_closeButton_icon": {
-                ...(0, g.Zb)(),
+                ...g.Zb(),
               },
             },
             settingsHamburgerMenu_closeButton_icon: {},
@@ -255,15 +255,15 @@
         }
         var U = s(27670);
 
-        function W(e) {
-          if ("number" != typeof e) return "----";
-          let t = 14,
-            s = 8;
-          return (
-            e < 0 && (e = 3599),
-            e >= 3600 && ((t = 12), (s = 10)),
-            new Date(1e3 * e).toISOString().substr(t, s)
-          );
+        function W(seconds) { // format time
+          if (typeof seconds !== "number") return "----";
+          let start = 14, length = 8;
+          if (seconds < 0) seconds = 3599;
+          if (seconds >= 3600) {
+            start = 12;
+            length = 10;
+          }
+          return new Date(seconds * 1000).toISOString().substr(start, length);
         }
 
         function $(e) {
@@ -275,9 +275,9 @@
             t in e
               ? Object.defineProperty(e, t, {
                   value: s,
-                  enumerable: !0,
-                  configurable: !0,
-                  writable: !0,
+                  enumerable: true,
+                  configurable: true,
+                  writable: true,
                 })
               : (e[t] = s),
             e
@@ -483,9 +483,10 @@
                 Y.offline.storeZigZagStreak();
             }
           }
-          getCurrentScore() {
+          getCurrentScore() { // self explanatory
             switch (this.session.settings.mode) {
               case q.Endless:
+                return this.game.time.elapsed
                 // return this.game.dist.unit;
                 return Math.floor(this.game.dist.unit);
               case q.TimeTrial:
@@ -494,11 +495,12 @@
                 return this.game.gates;
             }
           }
-          getCurrentScoreFormatted() {
+          getCurrentScoreFormatted() { // send score
             const e = this.getCurrentScore();
             switch (this.session.settings.mode) {
               case q.Endless:
               case q.ZigZag:
+                return W(e);
                 return e.toString();
               case q.TimeTrial:
                 return W(e);
@@ -1007,35 +1009,39 @@
               o = Math.floor(e * i.fps) % a.length;
             this.draw(pe.sys.objectsImg, i, t, s, a[o]);
           }
-
+          // Draw player
           drawPlayerSprite(
-            poseIndex,
-            timeElapsed = 0,
-            xPos = 0,
-            yPos = 0,
-            scale = 1,
-          ) {
-            // Retrieve player sprite sheet data
-            const playerSheet = be.sys.sheet.player;
-            // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
-            const poseData = te.sys.game.caught
-              ? playerSheet.poseData.end
-              : playerSheet.poseData[poseIndex];
-            // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
-            const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
-            // Draw the player sprite using the calculated frame and pose data
-            this.drawScaled(
-              be.sys.playerSprite, // The actual sprite image
-              playerSheet, // The player sprite sheet containing frame data
-              xPos, // X-coordinate where the sprite is drawn
-              yPos, // Y-coordinate where the sprite is drawn
-              {
-                x: poseData, // X position of the current pose in the sprite sheet
-                y: playerSheet.mount[frameIndex], // Y position of the current frame in the sprite sheet
-              },
-              scale, // Scale factor for resizing the sprite
-            );
-          }
+                poseIndex,
+                timeElapsed = 0,
+                xPos = 0,
+                yPos = 0,
+                scale = 1,
+              ) {
+                // Check if the character is 7, if so, do not draw the player
+                if (te.sys.session.settings.character === 7) {
+                  return;
+                }
+                // Retrieve player sprite sheet data
+                const playerSheet = be.sys.sheet.player;
+                // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
+                const poseData = te.sys.game.caught
+                  ? playerSheet.poseData.end
+                  : playerSheet.poseData[poseIndex];
+                // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
+                const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
+                // Draw the player sprite using the calculated frame and pose data
+                this.drawScaled(
+                  be.sys.playerSprite, // The actual sprite image
+                  playerSheet, // The player sprite sheet containing frame data
+                  xPos, // X-coordinate where the sprite is drawn
+                  yPos, // Y-coordinate where the sprite is drawn
+                  {
+                    x: poseData, // X position of the current pose in the sprite sheet
+                    y: playerSheet.mount[frameIndex], // Y position of the current frame in the sprite sheet
+                  },
+                  scale, // Scale factor for resizing the sprite
+                );
+              }
 
           drawPlayerMenu(e, t, s = 0, i = 0, a = 1) {
             const o = be.sys.sheet.player,
@@ -2800,7 +2806,7 @@
               case "mode":
                 this.notifyContent.textContent = Z.pz.getStringF("theme");
                 Z.pz.getString(s + "Title");
-                this.notifyContent.textContent = "Test";
+                // this.notifyContent.textContent = "Test";
                 break;
               case "theme":
                 this.notifyContent.textContent = Z.pz.getStringF(
@@ -2888,7 +2894,7 @@
               );
             } else {
               const t = te.sys.getCurrentScoreFormatted();
-              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit"); // display score???
+              this.scoreText.textContent = t + " " // + Z.pz.getString(e + "Unit"); // display score???
             }
           }
           updateIcons() {
@@ -7550,7 +7556,7 @@
               this.reset(),
               this.createSleepingObjects();
           }
-          reset() {
+          reset() { // important function
             void 0 === this.sleeping
               ? (this.sleeping = [])
               : (this.sleeping = this.sleeping
@@ -7601,7 +7607,7 @@
                   inc: 5e3,
                 },
               }),
-              (this.timetrial = {
+              (this.timetrial = { // where the level is defined
                 row: {
                   next: 0,
                   inc: 1088,
@@ -7749,7 +7755,7 @@
             }
             this.mergeAll();
           }
-          nextReady(e, t = !0) {
+          nextReady(e, t = !0) { // determines where to spawn things, in is distance to spawn and next is interval
             let s;
             return (
               (s = t
@@ -7766,7 +7772,7 @@
               this.nextReady(this.endless.foe) && this.createFoe(),
               this.nextReady(this.endless.npc) && this.createNpc();
           }
-          updateTimeTrialMode() {
+          updateTimeTrialMode() { // look at this later
             this.nextReady(this.timetrial.row, !1) &&
               this.timetrial.counter < this.timetrial.clusterList.length &&
               this.createTimeTrialAct();
@@ -7819,7 +7825,7 @@
               this.buildCluster(n, l, h), this.buildEndlessRandomSnags(l, h);
             }
           }
-          buildEndlessRandomSnags(e, t) {
+          buildEndlessRandomSnags(e, t) { // basically put random snags in the level
             const s = this.grid.gap,
               i = this.endless.row.inc / 2,
               a = [
@@ -7840,13 +7846,13 @@
               this.buildObject(n, e + i, t + o, l);
             }
           }
-          createTimeTrialAct() {
-            const e = this.timetrial.clusterList[this.timetrial.counter],
-              t = te.sys.session.x - te.sys.game.dist.x,
-              s = this.calcSpawnHeight(this.timetrial.row.next);
-            this.buildCluster("timetrialScenes", t, s, e),
-              (this.timetrial.counter += 1);
-          }
+            createTimeTrialAct() { // load time trial act
+              const currentCluster = this.timetrial.clusterList[this.timetrial.counter];
+              const xCoordinate = te.sys.session.x - te.sys.game.dist.x;
+              const yCoordinate = this.calcSpawnHeight(this.timetrial.row.next);
+              this.buildCluster("timetrialScenes", xCoordinate, yCoordinate, currentCluster);
+              this.timetrial.counter += 1;
+            }
           createZigZagStart() {
             this.buildCluster(
               "zigzagGates",
@@ -7916,39 +7922,39 @@
                 e.pose = "fail";
               });
           }
-          buildCluster(e, t, s, i) {
-            if (!i) {
-              const t = Object.keys(ye.sys.library[e]).filter(
-                (e) => !this.prevClusters.includes(e),
-              );
-              i = te.sys.randIndex(t);
-            }
-            const a = ye.sys.library[e][i];
-            this.prevClusters.unshift(i),
-              this.prevClusters.length > 14 && this.prevClusters.pop();
-            for (const e in a)
-              if (a.hasOwnProperty(e)) {
-                const i = a[e],
-                  o = i.length;
-                for (let a = 0; a < o; a++) {
-                  const o = i[a];
-                  let n;
-                  if (o.length > 2) {
-                    const t = o[2];
-                    n =
-                      "string" == typeof t
-                        ? te.sys.randIndex(ye.sys.legend[e][t])
-                        : t[0];
-                  } else {
-                    const t = this.randKey(ye.sys.legend[e], !0);
-                    n = te.sys.randIndex(ye.sys.legend[e][t]);
+        buildCluster(type, x, y, clusterId) {
+              if (!clusterId) {
+                const availableClusters = Object.keys(ye.sys.library[type]).filter(
+                  (cluster) => !this.prevClusters.includes(cluster)
+                );
+                clusterId = te.sys.randIndex(availableClusters);
+              }
+
+              const cluster = ye.sys.library[type][clusterId];
+              this.prevClusters.unshift(clusterId);
+              if (this.prevClusters.length > 14) this.prevClusters.pop();
+
+              for (const objectType in cluster) {
+                if (cluster.hasOwnProperty(objectType)) {
+                  const objects = cluster[objectType];
+                  for (const object of objects) {
+                    let variant;
+                    if (object.length > 2) {
+                      const variantKey = object[2];
+                      variant = typeof variantKey === "string"
+                        ? te.sys.randIndex(ye.sys.legend[objectType][variantKey])
+                        : variantKey[0];
+                    } else {
+                      const randomKey = this.randKey(ye.sys.legend[objectType], true);
+                      variant = te.sys.randIndex(ye.sys.legend[objectType][randomKey]);
+                    }
+                    const posX = x + object[0] * this.grid.size;
+                    const posY = y + object[1] * this.grid.size;
+                    this.buildObject(objectType, posX, posY, variant);
                   }
-                  const r = t + o[0] * this.grid.size,
-                    l = s + o[1] * this.grid.size;
-                  this.buildObject(e, r, l, n);
                 }
               }
-          }
+            }
           randKey(e, t = !1) {
             const s = Object.keys(e),
               i = e[s[(s.length * Math.random()) << 0]],
@@ -8615,25 +8621,27 @@
                     e.unit > 100 && ue.sys.sendNotification("score"));
             }
           }
-          changeCharacter(e, t = !1) {
-            t &&
-              !be.sys.selectionList.includes(be.sys.characterList[e]) &&
-              be.sys.selectionList.push(be.sys.characterList[e]);
-            const s = be.sys.selectionList;
-            t ||
-              (e =
-                (s.length + te.sys.session.settings.character + e) % s.length),
-              (this.skins.render = []);
-            const i = this.skins.zoom.length;
-            for (let t = 0; t < i; t++) {
-              const a = (s.length + e + (t - Math.floor(i / 2))) % s.length;
-              this.skins.render[t] = a;
-            }
-            (te.sys.session.settings.character = e),
-              te.sys.saveSessionSettings(),
-              be.sys.createPlayerSprite(),
-              Me.sys.setVibration("small");
-          }
+          changeCharacter(characterIndex, isNew = false) {
+                const { selectionList, characterList } = be.sys;
+                const { settings } = te.sys.session;
+                if (isNew && !selectionList.includes(characterList[characterIndex])) {
+                  selectionList.push(characterList[characterIndex]);
+                }
+                const selectedCharacters = selectionList;
+                if (!isNew) {
+                  characterIndex = (selectedCharacters.length + settings.character + characterIndex) % selectedCharacters.length;
+                }
+                this.skins.render = [];
+                const zoomLength = this.skins.zoom.length;
+                for (let i = 0; i < zoomLength; i++) {
+                  const index = (selectedCharacters.length + characterIndex + (i - Math.floor(zoomLength / 2))) % selectedCharacters.length;
+                  this.skins.render[i] = index;
+                }
+                settings.character = characterIndex;
+                te.sys.saveSessionSettings();
+                be.sys.createPlayerSprite();
+                Me.sys.setVibration("small");
+              }
           routeAction(e, t = !1) {
             if (
               !(
@@ -8979,7 +8987,7 @@
             }
             a.restore();
           }
-          draw() {
+          draw() { // Draw game
             if (
               (this.boostFx.length > 0 && de.sys.drawBoost(this.boostFx),
               this.swapped)
@@ -10642,13 +10650,14 @@
                     .settingsHamburgerMenu_flyout_divider,
               }),
 
-              // game theme settings
+              /** game theme settings
               this.renderGameThemePicker(),
               a.createElement(P.iz, {
                 className:
                   this.props.managedClasses
                     .settingsHamburgerMenu_flyout_divider,
-              }),
+              })
+              **/
 
               // share game section
               this.renderShareSection(),
@@ -10658,14 +10667,12 @@
                     .settingsHamburgerMenu_flyout_divider,
               }),
 
-              /** game settings toggles
-               * this.renderToggleSection(),
-               * a.createElement(P.iz, {
-               *   className:
-               *     this.props.managedClasses
-               *       .settingsHamburgerMenu_flyout_divider,
-               * }),
-               */
+               this.renderToggleSection(),
+               a.createElement(P.iz, {
+                 className:
+                   this.props.managedClasses
+                     .settingsHamburgerMenu_flyout_divider,
+               }),
 
               // game tips, info, and reset
               this.renderButtonSection(),
