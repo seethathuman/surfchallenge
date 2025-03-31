@@ -487,7 +487,6 @@
             switch (this.session.settings.mode) {
               case q.Endless:
                 return this.game.time.elapsed
-                // return this.game.dist.unit;
                 return Math.floor(this.game.dist.unit);
               case q.TimeTrial:
                 return this.game.time.elapsed - 2 * this.game.coins;
@@ -500,8 +499,8 @@
             switch (this.session.settings.mode) {
               case q.Endless:
               case q.ZigZag:
-                return W(e);
-                return e.toString();
+                return W(this.game.time.elapsed.toString()) + ", " Math.floor(this.game.dist.unit).toString();
+                // return e.toString();
               case q.TimeTrial:
                 return W(e);
             }
@@ -2894,7 +2893,7 @@
               );
             } else {
               const t = te.sys.getCurrentScoreFormatted();
-              this.scoreText.textContent = t + " " // + Z.pz.getString(e + "Unit"); // display score???
+              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit"); // display score???
             }
           }
           updateIcons() {
