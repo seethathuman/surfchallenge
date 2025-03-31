@@ -10650,13 +10650,14 @@
                     .settingsHamburgerMenu_flyout_divider,
               }),
 
-              // game theme settings
+              /** game theme settings
               this.renderGameThemePicker(),
               a.createElement(P.iz, {
                 className:
                   this.props.managedClasses
                     .settingsHamburgerMenu_flyout_divider,
-              }),
+              })
+              **/
 
               // share game section
               this.renderShareSection(),
