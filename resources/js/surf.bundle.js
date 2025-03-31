@@ -1019,7 +1019,6 @@
               ) {
                 // Check if the character is 7, if so, do not draw the player
                 if (te.sys.session.settings.character === 7) {
-                  console.log('player not rendering')
                   return;
                 }
                 // Retrieve player sprite sheet data
