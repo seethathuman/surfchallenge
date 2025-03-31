@@ -10667,14 +10667,12 @@
                     .settingsHamburgerMenu_flyout_divider,
               }),
 
-              /** game settings toggles
-               * this.renderToggleSection(),
-               * a.createElement(P.iz, {
-               *   className:
-               *     this.props.managedClasses
-               *       .settingsHamburgerMenu_flyout_divider,
-               * }),
-               */
+               this.renderToggleSection(),
+               a.createElement(P.iz, {
+                 className:
+                   this.props.managedClasses
+                     .settingsHamburgerMenu_flyout_divider,
+               }),
 
               // game tips, info, and reset
               this.renderButtonSection(),
