@@ -499,7 +499,7 @@
             switch (this.session.settings.mode) {
               case q.Endless:
               case q.ZigZag:
-                return W(this.game.time.elapsed.toString()) + ", " Math.floor(this.game.dist.unit).toString();
+                return W(this.game.time.elapsed.toString()) + ", " + Math.floor(this.game.dist.unit).toString();
                 // return e.toString();
               case q.TimeTrial:
                 return W(e);
