@@ -1011,33 +1011,38 @@
           }
           // Draw player
           drawPlayerSprite(
-            poseIndex,
-            timeElapsed = 0,
-            xPos = 0,
-            yPos = 0,
-            scale = 1,
-          ) {
-            // Retrieve player sprite sheet data
-            const playerSheet = be.sys.sheet.player;
-            // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
-            const poseData = te.sys.game.caught
-              ? playerSheet.poseData.end
-              : playerSheet.poseData[poseIndex];
-            // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
-            const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
-            // Draw the player sprite using the calculated frame and pose data
-            this.drawScaled(
-              be.sys.playerSprite, // The actual sprite image
-              playerSheet, // The player sprite sheet containing frame data
-              xPos, // X-coordinate where the sprite is drawn
-              yPos, // Y-coordinate where the sprite is drawn
-              {
-                x: poseData, // X position of the current pose in the sprite sheet
-                y: playerSheet.mount[frameIndex], // Y position of the current frame in the sprite sheet
-              },
-              scale, // Scale factor for resizing the sprite
-            );
-          }
+                poseIndex,
+                timeElapsed = 0,
+                xPos = 0,
+                yPos = 0,
+                scale = 1,
+              ) {
+                // Check if the character is 7, if so, do not draw the player
+                if (te.sys.session.settings.character === 7) {
+                  console.log('player not rendering')
+                  return;
+                }
+                // Retrieve player sprite sheet data
+                const playerSheet = be.sys.sheet.player;
+                // Get the pose data: if the player is "caught," use the end pose, otherwise use the pose corresponding to poseIndex
+                const poseData = te.sys.game.caught
+                  ? playerSheet.poseData.end
+                  : playerSheet.poseData[poseIndex];
+                // Calculate the current frame based on time and FPS (mod 3 for a 3-frame animation loop)
+                const frameIndex = Math.floor(timeElapsed * playerSheet.fps) % 3;
+                // Draw the player sprite using the calculated frame and pose data
+                this.drawScaled(
+                  be.sys.playerSprite, // The actual sprite image
+                  playerSheet, // The player sprite sheet containing frame data
+                  xPos, // X-coordinate where the sprite is drawn
+                  yPos, // Y-coordinate where the sprite is drawn
+                  {
+                    x: poseData, // X position of the current pose in the sprite sheet
+                    y: playerSheet.mount[frameIndex], // Y position of the current frame in the sprite sheet
+                  },
+                  scale, // Scale factor for resizing the sprite
+                );
+              }
 
           drawPlayerMenu(e, t, s = 0, i = 0, a = 1) {
             const o = be.sys.sheet.player,
@@ -2802,7 +2807,7 @@
               case "mode":
                 this.notifyContent.textContent = Z.pz.getStringF("theme");
                 Z.pz.getString(s + "Title");
-                this.notifyContent.textContent = "Test";
+                // this.notifyContent.textContent = "Test";
                 break;
               case "theme":
                 this.notifyContent.textContent = Z.pz.getStringF(
@@ -8617,25 +8622,27 @@
                     e.unit > 100 && ue.sys.sendNotification("score"));
             }
           }
-          changeCharacter(e, t = !1) {
-            t &&
-              !be.sys.selectionList.includes(be.sys.characterList[e]) &&
-              be.sys.selectionList.push(be.sys.characterList[e]);
-            const s = be.sys.selectionList;
-            t ||
-              (e =
-                (s.length + te.sys.session.settings.character + e) % s.length),
-              (this.skins.render = []);
-            const i = this.skins.zoom.length;
-            for (let t = 0; t < i; t++) {
-              const a = (s.length + e + (t - Math.floor(i / 2))) % s.length;
-              this.skins.render[t] = a;
-            }
-            (te.sys.session.settings.character = e),
-              te.sys.saveSessionSettings(),
-              be.sys.createPlayerSprite(),
-              Me.sys.setVibration("small");
-          }
+          changeCharacter(characterIndex, isNew = false) {
+                const { selectionList, characterList } = be.sys;
+                const { settings } = te.sys.session;
+                if (isNew && !selectionList.includes(characterList[characterIndex])) {
+                  selectionList.push(characterList[characterIndex]);
+                }
+                const selectedCharacters = selectionList;
+                if (!isNew) {
+                  characterIndex = (selectedCharacters.length + settings.character + characterIndex) % selectedCharacters.length;
+                }
+                this.skins.render = [];
+                const zoomLength = this.skins.zoom.length;
+                for (let i = 0; i < zoomLength; i++) {
+                  const index = (selectedCharacters.length + characterIndex + (i - Math.floor(zoomLength / 2))) % selectedCharacters.length;
+                  this.skins.render[i] = index;
+                }
+                settings.character = characterIndex;
+                te.sys.saveSessionSettings();
+                be.sys.createPlayerSprite();
+                Me.sys.setVibration("small");
+              }
           routeAction(e, t = !1) {
             if (
               !(
