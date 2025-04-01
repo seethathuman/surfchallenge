@@ -486,7 +486,6 @@
           getCurrentScore() { // self explanatory
             switch (this.session.settings.mode) {
               case q.Endless:
-                return this.game.time.elapsed
                 return Math.floor(this.game.dist.unit);
               case q.TimeTrial:
                 return this.game.time.elapsed - 2 * this.game.coins;
@@ -2893,7 +2892,7 @@
               );
             } else {
               const t = te.sys.getCurrentScoreFormatted();
-              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit"); // display score???
+              this.scoreText.textContent = t + " " + Z.pz.getString(e + "Unit"); // display score
             }
           }
           updateIcons() {
@@ -9679,7 +9678,7 @@
                 writable: !0,
               })
             : (Fe[Be] = Ve);
-        class Ze {
+        class Ze { // game loop
           constructor() {
             if (Ze.sys) return Ze.sys;
             (Ze.sys = this),
