@@ -434,7 +434,7 @@ var Surf = {
                   stats["theme"] = args[0]
                   break;
                case "get-percentage":
-                  response = 0.676767
+                  response = { "percentage": 67.67}
                   break;
                case "record-game-end":
                case "record-unload":
@@ -449,61 +449,7 @@ var Surf = {
                if (pendingEvents[callbackId]) {
                   pendingEvents[callbackId].resolve(response);
                   delete pendingEvents[callbackId];
-                  console.log(`Completed promise ID ${callbackId}`)
-               } else {
-                  console.error(`Invalid promise ID ${callbackId}`)
-               }
-            }
-         }, 0);
-      }; Chrome.send = function (command, args = []) {
-         const callbackId = args[0];
-         setTimeout(() => {
-            console.log(`send: "${command}" `, args);
-            let response;
-            let stats = JSON.parse(localStorage.getItem("surfstats")) || defaultStats();
-            switch (command) {
-               case "get-stats":
-                  response = stats;
-                  break;
-               case "reset-stats":
-                  stats = "";
-                  break;
-               case "set-high-score":
-                  (args[0] === "timetrial") && (e > 0) && (t *= 1e3)
-                  stats[args[0] + "_bestScore"] = Math.floor(args[1])
-                  break;
-               case "save-game-mode":
-                  stats["mode"] = args[0]
-                  break;
-               case "save-high-visibility-mode":
-                  stats["highVisibilityMode"] = args[0];
-                  break;
-               case "save-reduced-speed-mode":
-                  stats["reducedSpeedMode"] = args[0];
-                  break;
-               case "save-selected-character":
-                  stats["currentCharacter"] = args[0];
-                  break;
-               case "save-selected-theme":
-                  stats["theme"] = args[0]
-                  break;
-               case "get-percentage":
-                  response = 0.676767
-                  break;
-               case "record-game-end":
-               case "record-unload":
-               case "record-share-popup":
-                  break; // yell0wsuit's implementation seems to ignore these, and I can't figure out what these do
-               default:
-                  console.warn(`invalid command!!`);
-                  break;
-            }
-            localStorage.setItem("surfstats", JSON.stringify(stats));
-            if (response) {
-               if (pendingEvents[callbackId]) {
-                  pendingEvents[callbackId].resolve(response);
-                  delete pendingEvents[callbackId];
-                  console.log(`Completed promise ID ${callbackId}`)
+                  console.log(`Completed promise ID ${callbackId}, returning`, response)
                } else {
                   console.error(`Invalid promise ID ${callbackId}`)
                }
@@ -1095,12 +1041,12 @@ var Surf = {
          }
       }();
       const Lt = object(41281);
-      const Zt = function (e) {
+      const ApplyStyle = function (styles) {
          return function (t) {
             class s extends At {
                constructor() {
                   super(...arguments);
-                  this.styles = e;
+                  this.styles = styles;
                   this.managedComponent = t;
                }
             }
@@ -1716,7 +1662,7 @@ var Surf = {
       }, function (e) {
          return t => hi(ri(e)(t));
       });
-      const pi = Zt({
+      const pi = ApplyStyle({
          typography: {
             color: zt,
             "margin-top": "0",
@@ -1776,7 +1722,7 @@ var Surf = {
       };
       fi.displayName = `${bi}Paragraph`;
       const mi = fi;
-      const yi = Zt(Gs)(mi);
+      const yi = ApplyStyle(Gs)(mi);
       const vi = {
          heading: {
             "&$heading__1, &$heading__2, &$heading__3, &$heading__4, &$heading__5, &$heading__6, &$heading__7": Object.assign(Object.assign({}, Ns()), Bs())
@@ -1826,7 +1772,7 @@ var Surf = {
          managedClasses: {}
       };
       const xi = wi;
-      const Si = Zt(vi)(xi);
+      const Si = ApplyStyle(vi)(xi);
       function Mi(e = "") {
          return `&:focus-visible${e}`;
       }
@@ -2142,7 +2088,7 @@ var Surf = {
          managedClasses: {}
       };
       const Yi = Xi;
-      const Qi = Zt(qi)(Yi);
+      const Qi = ApplyStyle(qi)(Yi);
       function en(e) {
          return t => {
             const s = T(t);
@@ -2183,7 +2129,7 @@ var Surf = {
       xe(ye.hover, sn);
       xe(ye.active, sn);
       xe(ye.focus, sn);
-      const an = Zt(Object.assign(Object.assign({}, Gi), {
+      const an = ApplyStyle(Object.assign(Object.assign({}, Gi), {
          button: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, $i()), {
             padding: "0",
             border: "0",
@@ -2290,7 +2236,7 @@ var Surf = {
          const i = ue(e);
          return Pe(s + (Te(e) ? -1 : 1) * i, t);
       });
-      const un = Zt({
+      const un = ApplyStyle({
          divider: Object.assign({
             "box-sizing": "content-box",
             height: "0",
@@ -2341,7 +2287,7 @@ var Surf = {
          managedClasses: {}
       };
       const fn = gn;
-      const mn = Zt({
+      const mn = ApplyStyle({
          label: Object.assign(Object.assign({}, ui("t7")), {
             display: "inline-block",
             color: zt,
@@ -2615,7 +2561,7 @@ var Surf = {
       const Yn = Qe(P, si(0, 1, 2));
       const Qn = et(Jn, tt(Yn, 2));
       const eo = et(Xn, Yn, Qn);
-      const to = Zt({
+      const to = ApplyStyle({
          toggle: {
             display: "inline-block",
             color: zt,
@@ -2777,7 +2723,7 @@ var Surf = {
          focus: ao(e),
          selected: lo(e)
       }));
-      const co = Zt(Object.assign(Object.assign({}, Gi), {
+      const co = ApplyStyle(Object.assign(Object.assign({}, Gi), {
          button: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, $i()), {
             color: zt,
             fill: zt,
@@ -3766,7 +3712,7 @@ var Surf = {
          managedClasses: {}
       };
       const Ao = Io;
-      const Lo = Zt(yo)(Ao);
+      const Lo = ApplyStyle(yo)(Ao);
       const Zo = {
          select: {
             "max-width": "374px",
@@ -4718,7 +4664,7 @@ var Surf = {
          managedClasses: {}
       };
       const Yo = Xo;
-      const Qo = Zt(Fo)(Yo);
+      const Qo = ApplyStyle(Fo)(Yo);
       const er = {
          selectOption: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({
             "list-style-type": "none",
@@ -4936,7 +4882,7 @@ var Surf = {
          managedClasses: {}
       };
       const or = nr;
-      const rr = Zt(er)(or);
+      const rr = ApplyStyle(er)(or);
       const ar = {
          "background-color": "transparent"
       };
@@ -5224,7 +5170,7 @@ var Surf = {
          managedClasses: {}
       };
       const br = pr;
-      const gr = Zt(hr)(br);
+      const gr = ApplyStyle(hr)(br);
       function fr() {
          fr = Object.assign ? Object.assign.bind() : function (e) {
             for (var t = 1; t < arguments.length; t++) {
@@ -5239,7 +5185,7 @@ var Surf = {
          };
          return fr.apply(this, arguments);
       }
-      const mr = Zt({
+      const mr = ApplyStyle({
          buttonSection_container: {
             display: "flex",
             "justify-content": "space-between",
@@ -5852,7 +5798,7 @@ var Surf = {
          managedClasses: {}
       };
       Pr.displayName = `${zo}Dialog`;
-      const jr = Zt({
+      const jr = ApplyStyle({
          dialog: {
             display: "none",
             "&[aria-hidden=\"false\"]": {
@@ -5999,7 +5945,7 @@ var Surf = {
          };
          return Jr.apply(this, arguments);
       }
-      const Xr = Zt(vr)(class extends baseComponent {
+      const Xr = ApplyStyle(vr)(class extends baseComponent {
          componentDidMount() {
             this.node = n.findDOMNode(this);
             this.trapFocus(this.node);
@@ -6205,7 +6151,7 @@ var Surf = {
             marginBottom: "18px"
          }
       };
-      const sa = Zt(ta)(class extends baseComponent {
+      const sa = ApplyStyle(ta)(class extends baseComponent {
          constructor(...e) {
             super(...e);
             this.handledProps = {
@@ -6872,8 +6818,8 @@ var Surf = {
          static startShare(e, t, s, i) {
             Chrome.send("start-share", [e, t, s, i]);
          }
-         static async getPercentage(e, t) {
-            return (await SendEvent("get-percentage", [e, t])).percentage;
+         static async getPercentage(mode, score) {
+            return (await SendEvent("get-percentage", [mode, score])).percentage;
          }
       }
       Ta.numTimeTrialGames = 0;
@@ -7967,22 +7913,22 @@ var Surf = {
             this.ctx.clearRect(0, 0, Ma.sys.session.w, Ma.sys.session.h);
          }
          drawFx(e = 0, t = 0, s = 0) {
-            const i = Ia.sys.sheet.fx;
+            const i = PlayerManager.sys.sheet.fx;
             const n = i.poseData.effect;
             const o = Math.floor(e * i.fps) % n.length;
             this.draw(Da.sys.objectsImg, i, t, s, n[o]);
          }
          drawPlayerSprite(e, t = 0, s = 0, i = 0, n = 1) {
-            const o = Ia.sys.sheet.player;
+            const o = PlayerManager.sys.sheet.player;
             const r = Ma.sys.game.caught ? o.poseData.end : o.poseData[e];
             const a = Math.floor(t * o.fps) % 3;
-            this.drawScaled(Ia.sys.playerSprite, o, s, i, {
+            this.drawScaled(PlayerManager.sys.playerSprite, o, s, i, {
                x: r,
                y: o.mount[a]
             }, n);
          }
          drawPlayerMenu(e, t, s = 0, i = 0, n = 1) {
-            const o = Ia.sys.sheet.player;
+            const o = PlayerManager.sys.sheet.player;
             const r = o.character[e];
             const a = o.poseData[t];
             this.drawScaled(Da.sys.playerImg, o, s, i, {
@@ -7995,7 +7941,7 @@ var Surf = {
             }, n);
          }
          drawNpc(e, t, s, i) {
-            const n = Ia.sys.sheet.npc;
+            const n = PlayerManager.sys.sheet.npc;
             const o = {
                x: n.poseData[e],
                y: t * 64
@@ -8006,7 +7952,7 @@ var Surf = {
             if (o === "hidden") {
                return;
             }
-            const a = Ia.sys.sheet[e];
+            const a = PlayerManager.sys.sheet[e];
             const l = a.poseData[t] || [];
             const c = Math.floor(n * a.fps) % l.length;
             this.draw(Da.sys.objectsImg, a, s, i, l[c]);
@@ -8080,7 +8026,7 @@ var Surf = {
             n.stroke();
          }
          drawHitbox(e, t) {
-            const s = Ia.sys.sheet[e].str;
+            const s = PlayerManager.sys.sheet[e].str;
             if (s === undefined) {
                return;
             }
@@ -8111,7 +8057,7 @@ var Surf = {
          }
          drawBoundaries() {
             const e = Ma.sys.session.x - Ma.sys.game.dist.x;
-            const t = Ia.sys.boundary[Ma.sys.session.settings.mode];
+            const t = PlayerManager.sys.boundary[Ma.sys.session.settings.mode];
             const s = ja.sys.ctx;
             s.beginPath();
             s.rect(0, 0, e - t, Ma.sys.session.h);
@@ -8176,7 +8122,7 @@ var Surf = {
             const i = this.gradient.end.join(", ");
             ja.sys.gradient.style.background = "linear-gradient(180deg, rgb(" + s + ") 0%, rgb(" + i + ") 100%)";
             Ma.sys.session.settings.theme = e;
-            Ia.sys.createPlayerSprite();
+            PlayerManager.sys.createPlayerSprite();
             Ma.sys.saveSessionSettings();
             delete this.objectsTemp;
             delete this.playerTemp;
@@ -8187,7 +8133,7 @@ var Surf = {
       Da.allThemes = {
          ...ba
       };
-      class Ia {
+      class PlayerManager {
          constructor() {
             this.playerSprite = new Image();
             this.sheet = {
@@ -9218,10 +9164,10 @@ var Surf = {
             };
             this.characterList = undefined;
             this.selectionList = undefined;
-            if (Ia.sys) {
-               return Ia.sys;
+            if (PlayerManager.sys) {
+               return PlayerManager.sys;
             }
-            Ia.sys = this;
+            PlayerManager.sys = this;
             this.characterList = Object.keys(this.sheet.player.character);
             this.selectionList = ["player1", "player2", "player3", "player4", "player5", "player6", "player7"];
             if (LoadTimeData.getBoolean("isLinuxTuxEnabled") === false) {
@@ -9249,7 +9195,7 @@ var Surf = {
             boardCanvas.height = 64;
             boardCanvas.getContext("2d").imageSmoothingEnabled = false;
 
-            const n = Ia.sys.characterList[Ma.sys.session.settings.character];
+            const n = PlayerManager.sys.characterList[Ma.sys.session.settings.character];
             const o = this.sheet.player.character[n];
             this.applyLayers(ctx, Da.sys.playerImg, o, e, 64);
             if (Ma.sys.game.friend) {
@@ -9269,7 +9215,7 @@ var Surf = {
             e.drawImage(t, 0, s, i, n, 0, n * 2, i, n);
          }
       }
-      Ia.sys = null;
+      PlayerManager.sys = null;
       const Aa = e => React.createElement("svg", {
          width: "32",
          height: "14",
@@ -9389,7 +9335,7 @@ var Surf = {
          fill: "white",
          transform: "translate(0.000488281)"
       }))));
-      const La = Zt({
+      const La = ApplyStyle({
          shareBestScore: {
             display: "flex",
             alignItems: "center",
@@ -9422,7 +9368,7 @@ var Surf = {
             className: e.managedClasses.shareBestScore_iconPlaceHolder
          }));
       });
-      const Za = Zt({
+      const Za = ApplyStyle({
          sharePopup: {
             backgroundColor: "rgba(255,255,255,0.6)",
             backdropFilter: "blur(32px)",
@@ -9451,9 +9397,9 @@ var Surf = {
             marginTop: "10px"
          }
       })(e => {
-         const t = e.percentage;
-         const s = Math.floor(t * 100) / 100;
-         const n = LoadTimeData.getStringF("congrats", s);
+         const percentage = e.percentage;
+         const percentageBeat = Math.floor(percentage * 100) / 100;
+         const congratsString = LoadTimeData.getStringF("congrats", percentageBeat);
          return React.createElement("div", {
             className: e.managedClasses.sharePopup
          }, React.createElement(La, {
@@ -9463,7 +9409,7 @@ var Surf = {
             className: e.managedClasses.sharePopup_currentScore
          }, e.currentScoreFormatted), React.createElement("p", {
             className: e.managedClasses.sharePopup_congrats
-         }, n));
+         }, congratsString));
       });
       class Fa {
          constructor() {
@@ -9842,7 +9788,7 @@ var Surf = {
             this.reset();
          }
          reset() {
-            const e = Ia.sys.sheet[this.type];
+            const e = PlayerManager.sys.sheet[this.type];
             this.w = e.w;
             this.h = e.h;
             this.fx = e.fx;
@@ -10942,7 +10888,7 @@ var Surf = {
             switch (t) {
                case GameModeIDs.TimeTrial:
                case GameModeIDs.ZigZag:
-                  if (Math.abs(e.x) > Ia.sys.boundary[t]) {
+                  if (Math.abs(e.x) > PlayerManager.sys.boundary[t]) {
                      this.bounce();
                   }
                   break;
@@ -10960,30 +10906,30 @@ var Surf = {
             }
          }
          changeCharacter(e, t = false) {
-            const s = Ia.sys.characterList[Ma.sys.session.settings.character];
+            const s = PlayerManager.sys.characterList[Ma.sys.session.settings.character];
             let i;
             let n;
             if (t) {
-               i = Ia.sys.characterList[e];
-               if (!Ia.sys.selectionList.includes(i)) {
-                  Ia.sys.selectionList.push(i);
+               i = PlayerManager.sys.characterList[e];
+               if (!PlayerManager.sys.selectionList.includes(i)) {
+                  PlayerManager.sys.selectionList.push(i);
                }
-               n = Ia.sys.selectionList.indexOf(i);
+               n = PlayerManager.sys.selectionList.indexOf(i);
             }
-            const o = Ia.sys.selectionList;
+            const o = PlayerManager.sys.selectionList;
             if (!t) {
-               n = (o.length + Ia.sys.selectionList.indexOf(s) + e) % o.length;
-               i = Ia.sys.selectionList[n];
+               n = (o.length + PlayerManager.sys.selectionList.indexOf(s) + e) % o.length;
+               i = PlayerManager.sys.selectionList[n];
             }
             this.skins.render = [];
             const r = this.skins.zoom.length;
             for (let e = 0; e < r; e++) {
                const t = (o.length + n + (e - Math.floor(r / 2))) % o.length;
-               this.skins.render[e] = Ia.sys.selectionList[t];
+               this.skins.render[e] = PlayerManager.sys.selectionList[t];
             }
-            Ma.sys.session.settings.character = Ia.sys.characterList.indexOf(i);
+            Ma.sys.session.settings.character = PlayerManager.sys.characterList.indexOf(i);
             Ma.sys.saveSessionSettings();
-            Ia.sys.createPlayerSprite();
+            PlayerManager.sys.createPlayerSprite();
             Wa.sys.setVibration("small");
          }
          routeAction(e, t = false) {
@@ -11220,7 +11166,7 @@ var Surf = {
          }
          collectFriend() {
             Ma.sys.game.friend = true;
-            Ia.sys.createPlayerSprite();
+            PlayerManager.sys.createPlayerSprite();
             if (Ma.sys.session.settings.mode === GameModeIDs.Endless) {
                Ma.sys.game.shields.current = Ma.sys.game.shields.max;
                Fa.sys.refreshDisplay();
@@ -11230,7 +11176,7 @@ var Surf = {
          removeFriend(e = false) {
             if (!!Ma.sys.game.friend && !Ma.sys.game.cheat.safety && !e) {
                Ma.sys.game.friend = false;
-               Ia.sys.createPlayerSprite();
+               PlayerManager.sys.createPlayerSprite();
                Ma.sys.game.shields.current = 0;
                Fa.sys.refreshDisplay();
             }
@@ -11320,7 +11266,7 @@ var Surf = {
             const e = Ma.sys.game.time.elapsed;
             const t = this.skins.render.length;
             const s = Math.floor(t / 2);
-            const i = Math.floor(e * Ia.sys.sheet.player.fps) % this.skins.poses.length;
+            const i = Math.floor(e * PlayerManager.sys.sheet.player.fps) % this.skins.poses.length;
             const n = ja.sys.ctx;
             n.save();
             for (let o = 0; o < t; o++) {
@@ -11794,7 +11740,7 @@ var Surf = {
                   n.gateId = this.zigzag.counter;
             }
             n.time = Math.random();
-            switch (Ia.sys.sheet[e].group) {
+            switch (PlayerManager.sys.sheet[e].group) {
                case "top":
                   this.top.push(n);
                   break;
@@ -12078,7 +12024,7 @@ var Surf = {
             new va();
             new Ka();
             new Da();
-            new Ia();
+            new PlayerManager();
             new ja();
             new Xa();
             new Ya();
@@ -12271,7 +12217,7 @@ var Surf = {
             "padding-inline-end": "12px"
          }
       };
-      const tl = Zt(Object.assign(Object.assign({}, Gi), {
+      const tl = ApplyStyle(Object.assign(Object.assign({}, Gi), {
          button: Object.assign(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({}, $i()), {
             color: Dn,
             fill: Dn,
@@ -12327,7 +12273,7 @@ var Surf = {
          return sl.apply(this, arguments);
       }
       tl.displayName = `${bi}AccentButton`;
-      const il = kt(Zt(el)(class extends baseComponent {
+      const il = kt(ApplyStyle(el)(class extends baseComponent {
          constructor(...e) {
             super(...e);
             this.handledProps = {
@@ -12421,7 +12367,7 @@ var Surf = {
       function cl(e) {
          e.stopPropagation();
       }
-      const hl = Zt({
+      const hl = ApplyStyle({
          howToPlayModal: {},
          howToPlayModal_bulletedList: {
             listStyle: "none",
@@ -12670,7 +12616,7 @@ var Surf = {
       const fl = "toggleSettingsMenu";
       const ml = h.$j(function (e) {
          return e;
-      })(Zt(js)(class extends baseComponent {
+      })(ApplyStyle(js)(class extends baseComponent {
          constructor(e) {
             super(e);
             this.handledProps = {
