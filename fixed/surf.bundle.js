@@ -390,25 +390,45 @@
          const Ze = window.loadTimeData;
          const Fe = window.chrome;
 
-         //# chrome.send stub
-         //# TODO: use localstorage to store stats
+         function defaultStats() {
+            return {
+               endless_bestScore: -1,
+               zigzag_bestScore: -1,
+               timetrial_bestScore: -1,
+               currentCharacter: 1,
+               theme: "surf",
+               mode: "endless",
+               highVisibilityMode: false,
+               reducedSpeedMode: false
+            }
+         }
          Fe.send = function (command, args = []) {
             const callbackId = args[0];
-            console.log(`chrome.send called -> Command: "${command}" | Args:`, args);
             setTimeout(() => {
+               let response;
+               let stats = JSON.parse(localStorage.getItem("surfstats")) || defaultStats();
                switch (command) {
-                  case "get-stats":
-                     JSON.parse(localStorage.getItem("surfstats")) || ce.defaultStats();
-                     break;
-                  default:
-                     console.log("invalid command")
-                     break
+                  case "get-stats": response = stats; break;
+                  case "reset-stats": stats = ""; break;
+                  case "set-high-score": (args[0] === "timetrial") && (e > 0) && (t *= 1e3);
+                     stats[args[0] + "_bestScore"] = Math.floor(args[1]); break;
+                  case "save-game-mode": stats["mode"] = args[0]; break;
+                  case "save-high-visibility-mode": stats["highVisibilityMode"] = args[0]; break;
+                  case "save-reduced-speed-mode": stats["reducedSpeedMode"] = args[0]; break;
+                  case "save-selected-character": stats["currentCharacter"] = args[0]; break;
+                  case "save-selected-theme": stats["theme"] = args[0]; break;
+                  case "get-percentage":
+                  case "record-game-end":
+                  case "record-unload":
+                  case "record-share-popup":
+                  default: break;
                }
-               if (da[callbackId]) {
-                  da[callbackId].resolve({ status: "success" });
-                  delete da[callbackId];
-               } else {
-                  console.log(`Invalid promise ID ${callbackID}`)
+               localStorage.setItem("surfstats", JSON.stringify(stats));
+               if (response) {
+                  if (da[callbackId]) {
+                     da[callbackId].resolve(response);
+                     delete da[callbackId];
+                  }
                }
             }, 0);
          };
