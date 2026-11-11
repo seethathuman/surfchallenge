@@ -387,25 +387,126 @@ var Surf = {
       const LoadTimeData = window.loadTimeData;
       const Chrome = window.chrome;
 
+      function defaultStats() {
+         return {
+            endless_bestScore: -1,
+            zigzag_bestScore: -1,
+            timetrial_bestScore: -1,
+            currentCharacter: 1,
+            theme: "surf",
+            mode: "endless",
+            highVisibilityMode: false,
+            reducedSpeedMode: false
+         }
+      }
+
       //# chrome.send stub
-      //# TODO: use localstorage to store stats
       Chrome.send = function (command, args = []) {
          const callbackId = args[0];
-         console.log(`chrome.send called -> Command: "${command}" | Args:`, args);
          setTimeout(() => {
+            console.log(`send: "${command}" `, args);
+            let response;
+            let stats = JSON.parse(localStorage.getItem("surfstats")) || defaultStats();
             switch (command) {
                case "get-stats":
-                  JSON.parse(localStorage.getItem("surfstats")) || ResetStatsEvent();
+                  response = stats;
                   break;
+               case "reset-stats":
+                  stats = "";
+                  break;
+               case "set-high-score":
+                  (args[0] === "timetrial") && (e > 0) && (t *= 1e3)
+                  stats[args[0] + "_bestScore"] = Math.floor(args[1])
+                  break;
+               case "save-game-mode":
+                  stats["mode"] = args[0]
+                  break;
+               case "save-high-visibility-mode":
+                  stats["highVisibilityMode"] = args[0];
+                  break;
+               case "save-reduced-speed-mode":
+                  stats["reducedSpeedMode"] = args[0];
+                  break;
+               case "save-selected-character":
+                  stats["currentCharacter"] = args[0];
+                  break;
+               case "save-selected-theme":
+                  stats["theme"] = args[0]
+                  break;
+               case "get-percentage":
+                  response = 0.676767
+                  break;
+               case "record-game-end":
+               case "record-unload":
+               case "record-share-popup":
+                  break; // yell0wsuit's implementation seems to ignore these, and I can't figure out what these do
                default:
-                  console.warn("invalid command")
+                  console.warn(`invalid command!!`);
                   break;
             }
-            if (da[callbackId]) {
-               da[callbackId].resolve({ status: "success" });
-               delete da[callbackId];
-            } else {
-               console.error(`Invalid promise ID ${callbackId}`)
+            localStorage.setItem("surfstats", JSON.stringify(stats));
+            if (response) {
+               if (pendingEvents[callbackId]) {
+                  pendingEvents[callbackId].resolve(response);
+                  delete pendingEvents[callbackId];
+                  console.log(`Completed promise ID ${callbackId}`)
+               } else {
+                  console.error(`Invalid promise ID ${callbackId}`)
+               }
+            }
+         }, 0);
+      }; Chrome.send = function (command, args = []) {
+         const callbackId = args[0];
+         setTimeout(() => {
+            console.log(`send: "${command}" `, args);
+            let response;
+            let stats = JSON.parse(localStorage.getItem("surfstats")) || defaultStats();
+            switch (command) {
+               case "get-stats":
+                  response = stats;
+                  break;
+               case "reset-stats":
+                  stats = "";
+                  break;
+               case "set-high-score":
+                  (args[0] === "timetrial") && (e > 0) && (t *= 1e3)
+                  stats[args[0] + "_bestScore"] = Math.floor(args[1])
+                  break;
+               case "save-game-mode":
+                  stats["mode"] = args[0]
+                  break;
+               case "save-high-visibility-mode":
+                  stats["highVisibilityMode"] = args[0];
+                  break;
+               case "save-reduced-speed-mode":
+                  stats["reducedSpeedMode"] = args[0];
+                  break;
+               case "save-selected-character":
+                  stats["currentCharacter"] = args[0];
+                  break;
+               case "save-selected-theme":
+                  stats["theme"] = args[0]
+                  break;
+               case "get-percentage":
+                  response = 0.676767
+                  break;
+               case "record-game-end":
+               case "record-unload":
+               case "record-share-popup":
+                  break; // yell0wsuit's implementation seems to ignore these, and I can't figure out what these do
+               default:
+                  console.warn(`invalid command!!`);
+                  break;
+            }
+            localStorage.setItem("surfstats", JSON.stringify(stats));
+            if (response) {
+               if (pendingEvents[callbackId]) {
+                  pendingEvents[callbackId].resolve(response);
+                  delete pendingEvents[callbackId];
+                  console.log(`Completed promise ID ${callbackId}`)
+               } else {
+                  console.error(`Invalid promise ID ${callbackId}`)
+               }
             }
          }, 0);
       };
@@ -3822,8 +3923,7 @@ var Surf = {
          }
          static validateSelection(e, t) {
             return e.map(e => {
-               let s = "";
-               s = typeof e == "string" ? e : e.id;
+               let s = typeof e == "string" ? e : e.id;
                const i = this.getNodeById(s, t);
                if (qo.isValidSelectedItem(i)) {
                   return i.props;
@@ -5443,7 +5543,7 @@ var Surf = {
          if (t && Sr.call(e, xr)) {
             i.unshift(e);
          }
-         return i = i.filter(s);
+         return i.filter(s);
       }
       function kr(e) {
          var t = parseInt(e.getAttribute("tabindex"), 10);
@@ -6184,30 +6284,30 @@ var Surf = {
             fillRule: "nonzero"
          }));
       }
-      function oa(e) {
+      function ResolveGameModeID(e) {
          switch (e) {
             case "timetrial":
             case "SPEED":
-               return ra.TimeTrial;
+               return GameModeIDs.TimeTrial;
             case "BUOY":
             case "zigzag":
-               return ra.ZigZag;
+               return GameModeIDs.ZigZag;
             default:
-               return ra.Endless;
+               return GameModeIDs.Endless;
          }
       }
-      let ra = function (e) {
-         e.ZigZag = "zigzag";
-         e.Endless = "endless";
-         e.TimeTrial = "timetrial";
-         return e;
-      }({});
+      const GameModeIDs = {
+         ZigZag: "zigzag",
+         Endless: "endless",
+         TimeTrial: "timetrial",
+      };
+
       function aa(e, t) {
          if (!e) {
             throw new Error("Assertion failed" + (t ? `: ${t}` : ""));
          }
       }
-      class la {
+      class Deferred {
          constructor() {
             this.resolve_ = () => {};
             this.reject_ = () => {};
@@ -6237,25 +6337,25 @@ var Surf = {
             return this.reject_;
          }
       }
-      let ca = 1;
-      function ha() {
-         return ca++;
+      let eventCount = 1;
+      function incEventCounter() {
+         return eventCount++;
       }
-      const da = {};
-      function ua(e, ...t) {
-         const s = new la();
-         const i = e + "_" + ha();
-         da[i] = s;
-         chrome.send(e, [i].concat(t));
-         return s.promise;
+      const pendingEvents = {};
+      function SendEvent(id, ...args) {
+         const event = new Deferred();
+         const promiseID = id + "_" + incEventCounter();
+         pendingEvents[promiseID] = event;
+         Chrome.send(id, [promiseID].concat(args));
+         return event.promise;
       }
       const pa = {};
       Object.assign(window, {
          cr: {
             webUIResponse: function (e, t, s) {
-               const i = da[e];
+               const i = pendingEvents[e];
                aa(i, `webUIResponse resolver id: ${e}`);
-               delete da[e];
+               delete pendingEvents[e];
                if (t) {
                   i.resolve(s);
                } else {
@@ -6374,7 +6474,7 @@ var Surf = {
             const s = Ma.sys.game;
             return {
                gameMode: e,
-               score: e === ra.TimeTrial ? Math.floor(t * 1000) : t,
+               score: e === GameModeIDs.TimeTrial ? Math.floor(t * 1000) : t,
                konamiCodeUsed: s.cheat.used,
                msftCodeUsed: s.cheat.lives,
                edgeCodeUsed: s.cheat.boosts,
@@ -6387,7 +6487,7 @@ var Surf = {
             const t = Ma.sys.session.bestScore.endless;
             const s = Ma.sys.game;
             Ta.recordGameEnd({
-               ...this.getCommonStats(ra.Endless, e),
+               ...this.getCommonStats(GameModeIDs.Endless, e),
                loseCondition: s.caught ? "kraken" : "lives",
                dogCollected: s.friend
             });
@@ -6405,7 +6505,7 @@ var Surf = {
             const t = Ma.sys.session.bestScore.timetrial;
             const s = Ma.sys.game;
             Ta.recordGameEnd({
-               ...this.getCommonStats(ra.TimeTrial, e),
+               ...this.getCommonStats(GameModeIDs.TimeTrial, e),
                livesCollected: s.lives.numCollected
             });
             if (!s.cheat.used && (e < t || t < 0) && s.finish) {
@@ -6421,7 +6521,7 @@ var Surf = {
             const e = Ma.sys.getCurrentScore();
             const t = Ma.sys.session.bestScore.zigzag;
             const s = Ma.sys.game;
-            Ta.recordGameEnd(this.getCommonStats(ra.ZigZag, e));
+            Ta.recordGameEnd(this.getCommonStats(GameModeIDs.ZigZag, e));
             if (!s.cheat.used && e > t) {
                Ma.sys.session.bestScore.zigzag = e;
                s.highScore = true;
@@ -6514,43 +6614,43 @@ var Surf = {
          }
          saveGameStats() {
             switch (this.session.settings.mode) {
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   va.offline.storeEndlessStats();
                   break;
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   va.offline.storeTimeTrialStats();
                   break;
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   va.offline.storeZigZagStreak();
             }
          }
          getCurrentScore() {
             switch (this.session.settings.mode) {
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   return Math.floor(this.game.dist.unit);
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   return this.game.time.elapsed - this.game.coins * 2;
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   return this.game.gates;
             }
          }
          getCurrentScoreFormatted() {
             const e = this.getCurrentScore();
             switch (this.session.settings.mode) {
-               case ra.Endless:
-               case ra.ZigZag:
+               case GameModeIDs.Endless:
+               case GameModeIDs.ZigZag:
                   return e.toString();
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   return ma(e);
             }
          }
          getHighScore(e) {
             switch (e) {
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   return Math.max(this.session.bestScore.endless, 0).toString();
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   return ma(this.session.bestScore.timetrial);
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   return Math.max(this.session.bestScore.zigzag, 0).toString();
             }
          }
@@ -6621,7 +6721,7 @@ var Surf = {
          currentCharacter: IntFromSave("lastSelectedPlayer"),
          highVisibilityMode: LoadTimeData.getBoolean("highVisibilityActive"),
          gameSpeed: LoadTimeData.getBoolean("reducedSpeedActive") ? 0.5 : ka,
-         mode: oa(LoadTimeData.getString("lastSelectedMode")),
+         mode: ResolveGameModeID(LoadTimeData.getString("lastSelectedMode")),
          theme: ga(LoadTimeData.getString("lastSelectedTheme")),
          gameState: xa.Menu,
          endless_bestScore: IntFromSave("endlessBestScore"),
@@ -6692,23 +6792,23 @@ var Surf = {
       class Ta {
          static recordNewGame(e) {
             switch (e) {
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   Ta.numZigZagGames += 1;
                   break;
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   Ta.numEndlessGames += 1;
                   break;
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   Ta.numTimeTrialGames += 1;
             }
          }
          static async getAllStats() {
-            const e = await ua("get-stats");
+            const e = await SendEvent("get-stats");
             return {
                ...e,
                timetrial_bestScore: e.timetrial_bestScore < 0 ? -1 : e.timetrial_bestScore / 1000,
                gameSpeed: e.reducedSpeedMode ? 0.5 : ka,
-               mode: oa(e.mode),
+               mode: ResolveGameModeID(e.mode),
                theme: ga(e.theme)
             };
          }
@@ -6716,17 +6816,17 @@ var Surf = {
             Chrome.send("reset-stats");
          }
          static saveEndlessHighScore(e) {
-            Chrome.send("set-high-score", [ra.Endless, Math.floor(e)]);
+            Chrome.send("set-high-score", [GameModeIDs.Endless, Math.floor(e)]);
          }
          static saveZigZagHighScore(e) {
-            Chrome.send("set-high-score", [ra.ZigZag, Math.floor(e)]);
+            Chrome.send("set-high-score", [GameModeIDs.ZigZag, Math.floor(e)]);
          }
          static saveTimeTrialHighScore(e) {
             let t = e;
             if (e > 0) {
                t *= 1000;
             }
-            Chrome.send("set-high-score", [ra.TimeTrial, Math.floor(t)]);
+            Chrome.send("set-high-score", [GameModeIDs.TimeTrial, Math.floor(t)]);
          }
          static saveGameMode(e) {
             Chrome.send("save-game-mode", [e]);
@@ -6773,7 +6873,7 @@ var Surf = {
             Chrome.send("start-share", [e, t, s, i]);
          }
          static async getPercentage(e, t) {
-            return (await ua("get-percentage", [e, t])).percentage;
+            return (await SendEvent("get-percentage", [e, t])).percentage;
          }
       }
       Ta.numTimeTrialGames = 0;
@@ -9112,9 +9212,9 @@ var Surf = {
                }
             };
             this.boundary = {
-               [ra.ZigZag]: 960,
-               [ra.TimeTrial]: 576,
-               [ra.Endless]: undefined
+               [GameModeIDs.ZigZag]: 960,
+               [GameModeIDs.TimeTrial]: 576,
+               [GameModeIDs.Endless]: undefined
             };
             this.characterList = undefined;
             this.selectionList = undefined;
@@ -9125,9 +9225,9 @@ var Surf = {
             this.characterList = Object.keys(this.sheet.player.character);
             this.selectionList = ["player1", "player2", "player3", "player4", "player5", "player6", "player7"];
             if (LoadTimeData.getBoolean("isLinuxTuxEnabled") === false) {
-               this.characterList.forEach((e, t) => {
-                  if (e === "linux") {
-                     this.characterList.splice(t, 1);
+               this.characterList.forEach((id, index) => {
+                  if (id === "linux") {
+                     this.characterList.splice(index, 1);
                   }
                });
             }
@@ -9137,25 +9237,27 @@ var Surf = {
          }
          createPlayerSprite() {
             const e = 640;
-            const t = document.createElement("canvas");
-            t.width = e;
-            t.height = 192;
-            const s = t.getContext("2d");
-            s.imageSmoothingEnabled = false;
-            s.drawImage(Da.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192);
-            const i = document.createElement("canvas");
-            i.width = e;
-            i.height = 64;
-            i.getContext("2d").imageSmoothingEnabled = false;
+            const playerCanvas = document.createElement("canvas");
+            playerCanvas.width = e;
+            playerCanvas.height = 192;
+            const ctx = playerCanvas.getContext("2d");
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(Da.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192);
+
+            const boardCanvas = document.createElement("canvas");
+            boardCanvas.width = e;
+            boardCanvas.height = 64;
+            boardCanvas.getContext("2d").imageSmoothingEnabled = false;
+
             const n = Ia.sys.characterList[Ma.sys.session.settings.character];
             const o = this.sheet.player.character[n];
-            this.applyLayers(s, Da.sys.playerImg, o, e, 64);
+            this.applyLayers(ctx, Da.sys.playerImg, o, e, 64);
             if (Ma.sys.game.friend) {
                const t = this.sheet.player.friend;
-               this.applyLayers(s, Da.sys.playerImg, t, e, 64);
+               this.applyLayers(ctx, Da.sys.playerImg, t, e, 64);
             }
             const r = new Image();
-            r.src = t.toDataURL("image/png");
+            r.src = playerCanvas.toDataURL("image/png");
             (async () => {
                await r.decode();
                this.playerSprite.src = r.src;
@@ -10838,13 +10940,13 @@ var Surf = {
             const e = Ma.sys.game.dist;
             const t = Ma.sys.session.settings.mode;
             switch (t) {
-               case ra.TimeTrial:
-               case ra.ZigZag:
+               case GameModeIDs.TimeTrial:
+               case GameModeIDs.ZigZag:
                   if (Math.abs(e.x) > Ia.sys.boundary[t]) {
                      this.bounce();
                   }
                   break;
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   if (e.y < 8000 && e.x < -6400 && !Xa.sys.swapBuilt) {
                      Xa.sys.buildSwap();
                   }
@@ -11119,7 +11221,7 @@ var Surf = {
          collectFriend() {
             Ma.sys.game.friend = true;
             Ia.sys.createPlayerSprite();
-            if (Ma.sys.session.settings.mode === ra.Endless) {
+            if (Ma.sys.session.settings.mode === GameModeIDs.Endless) {
                Ma.sys.game.shields.current = Ma.sys.game.shields.max;
                Fa.sys.refreshDisplay();
             }
@@ -11436,26 +11538,26 @@ var Surf = {
          }
          buildStartScene() {
             switch (Ma.sys.session.settings.mode) {
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   this.createEndlessStart();
                   break;
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   this.createTimeTrialAct();
                   break;
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   this.createZigZagStart();
             }
          }
          update() {
             this.putToSleep();
             switch (Ma.sys.session.settings.mode) {
-               case ra.Endless:
+               case GameModeIDs.Endless:
                   this.updateEndlessMode();
                   break;
-               case ra.TimeTrial:
+               case GameModeIDs.TimeTrial:
                   this.updateTimeTrialMode();
                   break;
-               case ra.ZigZag:
+               case GameModeIDs.ZigZag:
                   this.updateZigZagMode();
             }
             this.mergeAll();
@@ -11858,9 +11960,9 @@ var Surf = {
                         this.collectAnim(n);
                         break;
                      case "ramp":
-                        if (s && Ma.sys.session.settings.mode !== ra.TimeTrial) {
+                        if (s && Ma.sys.session.settings.mode !== GameModeIDs.TimeTrial) {
                            e.air(1600);
-                        } else if (Ma.sys.session.settings.mode === ra.TimeTrial) {
+                        } else if (Ma.sys.session.settings.mode === GameModeIDs.TimeTrial) {
                            e.air(576);
                         } else {
                            e.air(1080);
@@ -12060,7 +12162,7 @@ var Surf = {
                }
             });
             Fa.sys.showOverScreen();
-            if (Ma.sys.session.settings.mode !== ra.TimeTrial || Ma.sys.game.finish) {
+            if (Ma.sys.session.settings.mode !== GameModeIDs.TimeTrial || Ma.sys.game.finish) {
                Ma.sys.saveGameStats();
             }
             const e = LoadTimeData.getBoolean("isNewShare") ? "share" : Ma.sys.game.highScore ? "score" : "share";
@@ -12148,7 +12250,7 @@ var Surf = {
                   ja.sys.drawHitbox(e.type, e.hitbox);
                });
             }
-            if (Ma.sys.session.settings.mode !== ra.Endless) {
+            if (Ma.sys.session.settings.mode !== GameModeIDs.Endless) {
                ja.sys.drawBoundaries();
             }
          }
@@ -12788,16 +12890,16 @@ var Surf = {
                selectedItems: [n],
                disabled: o
             }, React.createElement(rr, {
-               id: ra.Endless,
-               value: ra.Endless,
+               id: GameModeIDs.Endless,
+               value: GameModeIDs.Endless,
                displayString: t
             }), React.createElement(rr, {
-               id: ra.TimeTrial,
-               value: ra.TimeTrial,
+               id: GameModeIDs.TimeTrial,
+               value: GameModeIDs.TimeTrial,
                displayString: s
             }), React.createElement(rr, {
-               id: ra.ZigZag,
-               value: ra.ZigZag,
+               id: GameModeIDs.ZigZag,
+               value: GameModeIDs.ZigZag,
                displayString: e
             })));
          }
