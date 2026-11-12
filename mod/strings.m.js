@@ -94,5 +94,9 @@ loadTimeData.data = {
     "zigzagDescriptor": "streak",
     "zigzagModeTitleInline": "Zig zag:",
     "zigzagTitle": "Zig zag",
-    "zigzagUnit": "gates"
+    "zigzagUnit": "gates",
+    "hardcoreActive": false,
+    "hardcoreModeToggleLabel": "Hardcore Mode",
+    "speedrunActive": false,
+    "speedrunModeToggleLabel": "Speedrun Mode",
 };
