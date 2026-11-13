@@ -10140,29 +10140,29 @@ export var Surf = {
           switch (t) {
             case "arrowdown":
             case "s":
-              CheatManager.sys.routeInput(Ua.Down);
+              CheatManager.sys.routeInput(InputTypes.Down);
               break;
             case "arrowleft":
             case "a":
-              CheatManager.sys.routeInput(Ua.Left);
+              CheatManager.sys.routeInput(InputTypes.Left);
               break;
             case "arrowright":
             case "d":
-              CheatManager.sys.routeInput(Ua.Right);
+              CheatManager.sys.routeInput(InputTypes.Right);
               break;
             case "arrowup":
             case "w":
-              CheatManager.sys.routeInput(Ua.Stop);
+              CheatManager.sys.routeInput(InputTypes.Stop);
               break;
             case "enter":
             case " ":
-              CheatManager.sys.routeInput(Ua.Toggle);
+              CheatManager.sys.routeInput(InputTypes.Toggle);
               break;
             case "escape":
-              CheatManager.sys.routeInput(Ua.Settings, false, false);
+              CheatManager.sys.routeInput(InputTypes.Settings, false, false);
               break;
             case "f":
-              CheatManager.sys.routeInput(Ua.Boost, false, false);
+              CheatManager.sys.routeInput(InputTypes.Boost, false, false);
           }
           CheatManager.sys.checkCheatCode(t);
         }
@@ -10201,7 +10201,7 @@ export var Surf = {
         CheatManager.sys.changeInputMethod(ControlModes.Mouse);
         const t = UIManager.sys.selector || null;
         if (!t || !t.contains(e.target)) {
-          CheatManager.sys.routeInput(Ua.Toggle);
+          CheatManager.sys.routeInput(InputTypes.Toggle);
         }
       }
       onMouseMove(e) {
@@ -10216,23 +10216,23 @@ export var Surf = {
       onContextMenu(e) {
         e.preventDefault();
         if (GameDataManager.sys.session.state === MenuStates.Play) {
-          CheatManager.sys.routeInput(Ua.Boost, false, false);
+          CheatManager.sys.routeInput(InputTypes.Boost, false, false);
         }
       }
       checkAngle(e, t) {
         const s = Math.atan2(e.y - t.clientY, e.x - t.clientX) * 180 / Math.PI;
         if (s <= 0 && s >= -55) {
-          return Ua.Left;
+          return InputTypes.Left;
         } else if (s >= -180 && s <= -125) {
-          return Ua.Right;
+          return InputTypes.Right;
         } else if (s < -55 && s > -75) {
-          return Ua.DownLeft;
+          return InputTypes.DownLeft;
         } else if (s > -125 && s < -105) {
-          return Ua.DownRight;
+          return InputTypes.DownRight;
         } else if (s > 0 && s < 180) {
-          return Ua.Stop;
+          return InputTypes.Stop;
         } else {
-          return Ua.Down;
+          return InputTypes.Down;
         }
       }
     }
@@ -10314,10 +10314,10 @@ export var Surf = {
           };
           const t = this.checkAngle(e, this.touchData.down);
           if (GameDataManager.sys.session.state === MenuStates.Menu) {
-            if (t === Ua.Left || t === Ua.Right) {
+            if (t === InputTypes.Left || t === InputTypes.Right) {
               CheatManager.sys.routeInput(t, true, false);
             } else {
-              CheatManager.sys.routeInput(Ua.Toggle);
+              CheatManager.sys.routeInput(InputTypes.Toggle);
             }
           } else {
             CheatManager.sys.routeInput(t, true, true);
@@ -10327,31 +10327,31 @@ export var Surf = {
           let e = this.checkAngle(this.touchData.down, this.touchData.move);
           if (GameDataManager.sys.session.state === MenuStates.Menu) {
             switch (e) {
-              case Ua.Right:
-                e = Ua.Left;
+              case InputTypes.Right:
+                e = InputTypes.Left;
                 break;
-              case Ua.Left:
-                e = Ua.Right;
+              case InputTypes.Left:
+                e = InputTypes.Right;
             }
           }
-          const t = e === Ua.Down;
+          const t = e === InputTypes.Down;
           CheatManager.sys.routeInput(e, false, t);
         }
       }
       checkAngle(e, t) {
         const s = Math.atan2(e.y - t.y, e.x - t.x) * 180 / Math.PI;
         if (s <= 30 && s >= -55) {
-          return Ua.Left;
+          return InputTypes.Left;
         } else if (s >= 150 || s >= -180 && s <= -125) {
-          return Ua.Right;
+          return InputTypes.Right;
         } else if (s < -55 && s > -75) {
-          return Ua.DownLeft;
+          return InputTypes.DownLeft;
         } else if (s > -125 && s < -105) {
-          return Ua.DownRight;
+          return InputTypes.DownRight;
         } else if (s > 30 && s < 150) {
-          return Ua.Stop;
+          return InputTypes.Stop;
         } else {
-          return Ua.Down;
+          return InputTypes.Down;
         }
       }
       interact(e) {
@@ -10360,7 +10360,7 @@ export var Surf = {
       }
     }
     TouchManager.sys = null;
-    let Ua = function (e) {
+    let InputTypes = function (e) {
       e.Settings = "settings";
       e.Left = "left";
       e.Right = "right";
@@ -10415,7 +10415,7 @@ export var Surf = {
       }
       routeInput(e, t = false, s = true) {
         if (GameDataManager.sys.session.flyoutActive) {
-          if (e === Ua.Settings) {
+          if (e === InputTypes.Settings) {
             this.inputSettings();
           }
           return;
@@ -10425,23 +10425,23 @@ export var Surf = {
         if (s) {
           n = this.registerDoubleInput(e);
         }
-        if (i !== ControlModes.Mouse && i !== ControlModes.Touch || e !== Ua.Toggle || n) {
-          if (i !== ControlModes.Keyboard && i !== ControlModes.Touch || e !== Ua.Down || t || !n) {
+        if (i !== ControlModes.Mouse && i !== ControlModes.Touch || e !== InputTypes.Toggle || n) {
+          if (i !== ControlModes.Keyboard && i !== ControlModes.Touch || e !== InputTypes.Down || t || !n) {
             if (i === ControlModes.Touch && n) {
-              e = Ua.Toggle;
+              e = InputTypes.Toggle;
             }
           } else {
-            e = Ua.Boost;
+            e = InputTypes.Boost;
           }
-          if (GameDataManager.sys.session.state !== MenuStates.Menu || e !== Ua.Left && e !== Ua.Right) {
+          if (GameDataManager.sys.session.state !== MenuStates.Menu || e !== InputTypes.Left && e !== InputTypes.Right) {
             switch (e) {
-              case Ua.Toggle:
+              case InputTypes.Toggle:
                 this.inputToggle();
                 break;
-              case Ua.Settings:
+              case InputTypes.Settings:
                 this.inputSettings();
                 break;
-              case Ua.Reset:
+              case InputTypes.Reset:
                 SurfMain.sys.changeGameState(MenuStates.Menu);
                 break;
               default:
@@ -10449,10 +10449,10 @@ export var Surf = {
             }
           } else {
             switch (e) {
-              case Ua.Left:
+              case InputTypes.Left:
                 PlayerManager.sys.changeCharacter(-1);
                 break;
-              case Ua.Right:
+              case InputTypes.Right:
                 PlayerManager.sys.changeCharacter(1);
             }
           }
@@ -10734,25 +10734,25 @@ export var Surf = {
               if (!i || o || n) {
                 if (!s || o || n) {
                   if (s && o) {
-                    r = Ua.Right;
+                    r = InputTypes.Right;
                   } else if (s && n) {
-                    r = Ua.DownRight;
+                    r = InputTypes.DownRight;
                   } else if (i && o) {
-                    r = Ua.Left;
+                    r = InputTypes.Left;
                   } else if (i && n) {
-                    r = Ua.DownLeft;
+                    r = InputTypes.DownLeft;
                   }
                 } else {
-                  r = Ua.Right;
+                  r = InputTypes.Right;
                 }
               } else {
-                r = Ua.Left;
+                r = InputTypes.Left;
               }
             } else {
-              r = Ua.Down;
+              r = InputTypes.Down;
             }
           } else {
-            r = Ua.Stop;
+            r = InputTypes.Stop;
           }
         } else {
           this.last = undefined;
@@ -10764,10 +10764,10 @@ export var Surf = {
         if (r) {
           if (GameDataManager.sys.session.flyoutActive) {
             switch (r) {
-              case Ua.Stop:
+              case InputTypes.Stop:
                 this.focusNextElement(-1);
                 break;
-              case Ua.Down:
+              case InputTypes.Down:
                 this.focusNextElement(1);
             }
           } else {
@@ -10785,7 +10785,7 @@ export var Surf = {
           }
         }
         if (t(e.buttons[4]) && t(e.buttons[5])) {
-          CheatManager.sys.routeInput(Ua.Reset);
+          CheatManager.sys.routeInput(InputTypes.Reset);
           this.linkedPad.pressed.lb = true;
           this.linkedPad.pressed.rb = true;
           return null;
@@ -10805,7 +10805,7 @@ export var Surf = {
                   document.activeElement.click();
                   break;
                 case "b":
-                  CheatManager.sys.routeInput(Ua.Settings, false, false);
+                  CheatManager.sys.routeInput(InputTypes.Settings, false, false);
                   break;
                 case "up":
                   this.focusNextElement(-1);
@@ -10817,31 +10817,31 @@ export var Surf = {
             }
             switch (this.buttonMap[n]) {
               case "a":
-                s = Ua.Toggle;
+                s = InputTypes.Toggle;
                 break;
               case "lb":
               case "left":
-                s = Ua.Left;
+                s = InputTypes.Left;
                 break;
               case "rb":
               case "right":
-                s = Ua.Right;
+                s = InputTypes.Right;
                 break;
               case "lt":
               case "rt":
-                s = Ua.Boost;
+                s = InputTypes.Boost;
                 break;
               case "up":
-                s = Ua.Stop;
+                s = InputTypes.Stop;
                 break;
               case "down":
-                s = Ua.Down;
+                s = InputTypes.Down;
                 break;
               case "select":
               case "start":
               case "home":
               case "touchpad":
-                s = Ua.Settings;
+                s = InputTypes.Settings;
             }
             CheatManager.sys.routeInput(s, false, false);
             CheatManager.sys.checkCheatCode(s);
@@ -10979,21 +10979,23 @@ export var Surf = {
         ControllerManager.sys.setVibration("small");
       }
       routeAction(e, t = false) {
-        if (GameDataManager.sys.session.state === MenuStates.Play && !this.timer.crash && !("bounce" in this.dist) && (!("air" in this.dist) || e === Ua.Down)) {
+        if (GameDataManager.sys.session.state === MenuStates.Play && !this.timer.crash && !("bounce" in this.dist) && (!("air" in this.dist) || e === InputTypes.Down)) {
           switch (e) {
-            case Ua.Stop:
-              this.stop();
+            case InputTypes.Stop:
+              if (!GameDataManager.sys.session.settings.speedrunMode) {
+                this.stop();
+              }
               break;
-            case Ua.Down:
+            case InputTypes.Down:
               this.down();
               break;
-            case Ua.Left:
-            case Ua.Right:
-            case Ua.DownLeft:
-            case Ua.DownRight:
+            case InputTypes.Left:
+            case InputTypes.Right:
+            case InputTypes.DownLeft:
+            case InputTypes.DownRight:
               this.changeDirection(e, t);
               break;
-            case Ua.Boost:
+            case InputTypes.Boost:
               this.boost();
           }
         }
@@ -12193,9 +12195,9 @@ export var Surf = {
         this.render();
       }
       updateOver() {
-        const e = MapBuilder.sys.endingFoe;
-        if (e && e.hit && e.anim !== "paused") {
-          e.update();
+        const endingFoe = MapBuilder.sys.endingFoe;
+        if (endingFoe && endingFoe.hit && endingFoe.anim !== "paused") {
+          endingFoe.update();
           this.render();
         }
       }
