@@ -6729,7 +6729,7 @@ export var Surf = {
           const s = eventType;
           //# can't figure out how data is propagated, injecting it into state here is the easiest option
           if (GameDataManager.sys) GameDataManager.sys.game.hardcore = s.hardcoreMode
-          if (GameDataManager.sys) GameDataManager.sys.game.lives.max = e ? 1 : 3
+          if (GameDataManager.sys) GameDataManager.sys.game.lives.max = s.speedrunMode ? 1 : 3
           return {
             ...CurrentLoadData,
             currentCharacter: eventType.currentCharacter,
