@@ -6730,6 +6730,7 @@ export var Surf = {
           //# can't figure out how data is propagated, injecting it into state here is the easiest option
           if (GameDataManager.sys) GameDataManager.sys.game.hardcore = s.hardcoreMode
           if (GameDataManager.sys) GameDataManager.sys.game.lives.max = s.speedrunMode ? 1 : 3
+
           return {
             ...CurrentLoadData,
             currentCharacter: eventType.currentCharacter,
@@ -7951,7 +7952,7 @@ export var Surf = {
         const i = PlayerSpriteManager.sys.sheet.fx;
         const n = i.poseData.effect;
         const o = Math.floor(e * i.fps) % n.length;
-        this.draw(Da.sys.objectsImg, i, t, s, n[o]);
+        this.draw(ThemeManager.sys.objectsImg, i, t, s, n[o]);
       }
       drawPlayerSprite(e, t = 0, s = 0, i = 0, n = 1) {
         const o = PlayerSpriteManager.sys.sheet.player;
@@ -7966,11 +7967,11 @@ export var Surf = {
         const o = PlayerSpriteManager.sys.sheet.player;
         const r = o.character[e];
         const a = o.poseData[t];
-        this.drawScaled(Da.sys.playerImg, o, s, i, {
+        this.drawScaled(ThemeManager.sys.playerImg, o, s, i, {
           x: a,
           y: 0
         }, n);
-        this.drawScaled(Da.sys.playerImg, o, s, i, {
+        this.drawScaled(ThemeManager.sys.playerImg, o, s, i, {
           x: a,
           y: r
         }, n);
@@ -7981,7 +7982,7 @@ export var Surf = {
           x: n.poseData[e],
           y: t * 64
         };
-        this.draw(Da.sys.objectsImg, n, s, i, o);
+        this.draw(ThemeManager.sys.objectsImg, n, s, i, o);
       }
       drawLayer(e, t, s = 0, i = 0, n = 0, o = "looping", r = undefined) {
         if (o === "hidden") {
@@ -7990,7 +7991,7 @@ export var Surf = {
         const a = PlayerSpriteManager.sys.sheet[e];
         const l = a.poseData[t] || [];
         const c = Math.floor(n * a.fps) % l.length;
-        this.draw(Da.sys.objectsImg, a, s, i, l[c]);
+        this.draw(ThemeManager.sys.objectsImg, a, s, i, l[c]);
         if ((o === "oneshot" || o === "ending") && Math.ceil(n * a.fps) > l.length - 1) {
           switch (o) {
             case "oneshot":
@@ -8010,7 +8011,7 @@ export var Surf = {
       }
       drawBoost(e) {
         const t = RenderManager.sys.ctx;
-        t.strokeStyle = "rgba(" + Da.sys.accent + ",0.5)";
+        t.strokeStyle = "rgba(" + ThemeManager.sys.accent + ",0.5)";
         t.lineCap = "round";
         t.setLineDash([]);
         e.forEach(e => {
@@ -8031,12 +8032,12 @@ export var Surf = {
         const a = RenderManager.sys.ctx;
         a.beginPath();
         a.ellipse(e, t, o, o * 0.7, 0, 0, Math.PI * 2);
-        a.strokeStyle = "rgba(" + Da.sys.accent + "," + (6 - i) / 4 + ")";
+        a.strokeStyle = "rgba(" + ThemeManager.sys.accent + "," + (6 - i) / 4 + ")";
         a.lineWidth = 6 - i;
         a.stroke();
         a.beginPath();
         a.ellipse(e, t, r / 2, r / 2 * 0.7, 0, 0, Math.PI * 2);
-        a.fillStyle = "rgba(" + Da.sys.accent + "," + n / 8 + ")";
+        a.fillStyle = "rgba(" + ThemeManager.sys.accent + "," + n / 8 + ")";
         a.fill();
       }
       drawPickup(e) {
@@ -8051,12 +8052,12 @@ export var Surf = {
         const n = RenderManager.sys.ctx;
         n.beginPath();
         n.arc(e.x, e.y, s, 0, Math.PI * 2);
-        n.strokeStyle = "rgba(" + Da.sys.accent + "," + (1 - t) + ")";
+        n.strokeStyle = "rgba(" + ThemeManager.sys.accent + "," + (1 - t) + ")";
         n.lineWidth = (1 - t) * 6;
         n.stroke();
         n.beginPath();
         n.arc(e.x, e.y, i, 0, Math.PI * 2);
-        n.strokeStyle = "rgba(" + Da.sys.accent + "," + (1 - t * 2) + ")";
+        n.strokeStyle = "rgba(" + ThemeManager.sys.accent + "," + (1 - t * 2) + ")";
         n.lineWidth = (1 - t * 2) * 6;
         n.stroke();
       }
@@ -8066,7 +8067,7 @@ export var Surf = {
           return;
         }
         const i = s !== "crash";
-        let n = Da.sys.hitbox[s];
+        let n = ThemeManager.sys.hitbox[s];
         if (GameDataManager.sys.session.forcedColors) {
           switch (s) {
             case "crash":
@@ -8097,7 +8098,7 @@ export var Surf = {
         s.beginPath();
         s.rect(0, 0, e - t, GameDataManager.sys.session.h);
         s.rect(e + t, 0, GameDataManager.sys.session.w, GameDataManager.sys.session.h);
-        s.fillStyle = "rgba(" + Da.sys.boundary + ")";
+        s.fillStyle = "rgba(" + ThemeManager.sys.boundary + ")";
         s.fill();
       }
       drawScaled(e, t, s, i, n, o = 1) {
@@ -8108,7 +8109,7 @@ export var Surf = {
       }
     }
     RenderManager.sys = null;
-    class Da {
+    class ThemeManager {
       constructor() {
         this.objectsImg = null;
         this.playerImg = null;
@@ -8121,10 +8122,10 @@ export var Surf = {
         this.hitbox = undefined;
         this.boundary = undefined;
         this.accent = undefined;
-        if (Da.sys) {
-          return Da.sys;
+        if (ThemeManager.sys) {
+          return ThemeManager.sys;
         }
-        Da.sys = this;
+        ThemeManager.sys = this;
         this.setupImages();
       }
       setupImages() {
@@ -8134,7 +8135,7 @@ export var Surf = {
         this.bgSize = 256;
       }
       loadNewTheme(e) {
-        const t = Da.allThemes[e];
+        const t = ThemeManager.allThemes[e];
         this.objectsTemp = new Image();
         this.objectsTemp.src = t.folder + "/objects.png";
         this.playerTemp = new Image();
@@ -8143,7 +8144,7 @@ export var Surf = {
         this.bgTemp.src = t.folder + "/bg.png";
       }
       setNewTheme(e) {
-        const t = Da.allThemes[e];
+        const t = ThemeManager.allThemes[e];
         this.objectsImg.src = this.objectsTemp.src;
         this.playerImg.src = this.playerTemp.src;
         this.bgImg.src = this.bgTemp.src;
@@ -8164,8 +8165,8 @@ export var Surf = {
         delete this.bgTemp;
       }
     }
-    Da.sys = null;
-    Da.allThemes = {
+    ThemeManager.sys = null;
+    ThemeManager.allThemes = {
       ...ba
     };
     class PlayerSpriteManager {
@@ -9223,7 +9224,7 @@ export var Surf = {
         playerCanvas.height = 192;
         const ctx = playerCanvas.getContext("2d");
         ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(Da.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192);
+        ctx.drawImage(ThemeManager.sys.playerImg, 0, 0, e, 192, 0, 0, e, 192);
 
         const boardCanvas = document.createElement("canvas");
         boardCanvas.width = e;
@@ -9232,10 +9233,10 @@ export var Surf = {
 
         const n = PlayerSpriteManager.sys.characterList[GameDataManager.sys.session.settings.character];
         const o = this.sheet.player.character[n];
-        this.applyLayers(ctx, Da.sys.playerImg, o, e, 64);
+        this.applyLayers(ctx, ThemeManager.sys.playerImg, o, e, 64);
         if (GameDataManager.sys.game.friend) {
           const t = this.sheet.player.friend;
-          this.applyLayers(ctx, Da.sys.playerImg, t, e, 64);
+          this.applyLayers(ctx, ThemeManager.sys.playerImg, t, e, 64);
         }
         const r = new Image();
         r.src = playerCanvas.toDataURL("image/png");
@@ -9741,7 +9742,7 @@ export var Surf = {
         }
         this.livesDisplay.textContent = "";
         this.boostDisplay.textContent = "";
-        const i = "url(" + Da.sys.objectsImg.src + ")";
+        const i = "url(" + ThemeManager.sys.objectsImg.src + ")";
         lives.forEach(e => {
           this.createNew("div", this.livesDisplay, undefined, e).style.backgroundImage = i;
         });
@@ -11092,12 +11093,13 @@ export var Surf = {
         if ("immune" in this.dist) {
           return;
         }
-        const e = GameDataManager.sys.game.cheat;
-        if (GameDataManager.sys.game.friend && !e.safety) {
+        GameDataManager.sys.game.lives.current = Math.min(GameDataManager.sys.game.lives.current, GameDataManager.sys.game.lives.max)
+        const cheats = GameDataManager.sys.game.cheat;
+        if (GameDataManager.sys.game.friend && !cheats.safety) {
           this.removeFriend();
           MapBuilder.sys.buildCrashedFriend(this.x + (Math.random() - 0.5) * 48, this.y + 32);
         }
-        if (!e.lives && !e.safety) {
+        if (!cheats.lives && !cheats.safety) {
           GameDataManager.sys.game.lives.current -= 1;
         }
         UIManager.sys.refreshDisplay();
@@ -11879,12 +11881,12 @@ export var Surf = {
       }
     }
     MapBuilder.sys = null;
-    class Ya {
+    class PhysicsManager {
       constructor() {
-        if (Ya.sys) {
-          return Ya.sys;
+        if (PhysicsManager.sys) {
+          return PhysicsManager.sys;
         }
-        Ya.sys = this;
+        PhysicsManager.sys = this;
       }
       update() {
         this.checkCollisions();
@@ -11896,7 +11898,7 @@ export var Surf = {
         const i = this.filterVisible(MapBuilder.sys.top.concat(MapBuilder.sys.btm));
         const n = i.length;
         function o(e, t) {
-          if (!(e.y < 16) && Ya.sys.collision(t, e) && !t.objectsHit.includes(e)) {
+          if (!(e.y < 16) && PhysicsManager.sys.collision(t, e) && !t.objectsHit.includes(e)) {
             t.objectsHit.push(e);
             switch (e.type) {
               case "wall":
@@ -12070,7 +12072,7 @@ export var Surf = {
         return !(t.hitbox.x + t.hitbox.w < e.hitbox.x) && !(e.hitbox.x + e.hitbox.w < t.hitbox.x) && !(t.hitbox.y + t.hitbox.h < e.hitbox.y) && !(e.hitbox.y + e.hitbox.h < t.hitbox.y);
       }
     }
-    Ya.sys = null;
+    PhysicsManager.sys = null;
     class SurfMain {
       constructor() {
         if (SurfMain.sys) {
@@ -12080,11 +12082,11 @@ export var Surf = {
         new GameDataManager();
         new StatsWrapper();
         new CheatManager();
-        new Da();
+        new ThemeManager();
         new PlayerSpriteManager();
         new RenderManager();
         new MapBuilder();
-        new Ya();
+        new PhysicsManager();
         new UIManager();
         RenderManager.sys.createBackground();
         this.updateTheme(GameDataManager.sys.session.settings.theme, false);
@@ -12177,7 +12179,7 @@ export var Surf = {
         this.render();
       }
       updatePlay() {
-        Ya.sys.update();
+        PhysicsManager.sys.update();
         MapBuilder.sys.update();
         MapBuilder.sys.all.forEach(e => {
           e.update();
@@ -12202,12 +12204,12 @@ export var Surf = {
         UIManager.sys.sendNotification("mode");
       }
       updateTheme(e, t = false) {
-        Da.sys.loadNewTheme(e);
+        ThemeManager.sys.loadNewTheme(e);
         (async () => {
-          await Da.sys.objectsTemp.decode();
-          await Da.sys.playerTemp.decode();
-          await Da.sys.bgTemp.decode();
-          Da.sys.setNewTheme(e);
+          await ThemeManager.sys.objectsTemp.decode();
+          await ThemeManager.sys.playerTemp.decode();
+          await ThemeManager.sys.bgTemp.decode();
+          ThemeManager.sys.setNewTheme(e);
           UIManager.sys.updateIcons();
           UIManager.sys.updateGameTitleUI();
           if (t) {

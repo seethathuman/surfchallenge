@@ -98,5 +98,5 @@ loadTimeData.data = {
     "hardcoreActive": false,
     "hardcoreModeToggleLabel": "Hardcore Mode",
     "speedrunActive": false,
-    "speedrunModeToggleLabel": "Speedrun Mode",
+    "speedrunModeToggleLabel": "Speedrunner Mode",
 };
