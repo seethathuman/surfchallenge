@@ -7954,13 +7954,15 @@ export var Surf = {
         const o = Math.floor(e * i.fps) % n.length;
         this.draw(ThemeManager.sys.objectsImg, i, t, s, n[o]);
       }
-      drawPlayerSprite(e, t = 0, s = 0, i = 0, n = 1) {
-        const o = PlayerSpriteManager.sys.sheet.player;
-        const r = GameDataManager.sys.game.caught ? o.poseData.end : o.poseData[e];
-        const a = Math.floor(t * o.fps) % 3;
-        this.drawScaled(PlayerSpriteManager.sys.playerSprite, o, s, i, {
-          x: r,
-          y: o.mount[a]
+      drawPlayerSprite(e, time = 0, s = 0, i = 0, n = 1) {
+        const spritesheet = PlayerSpriteManager.sys.sheet.player;
+        const pose = GameDataManager.sys.game.caught ? spritesheet.poseData.end : spritesheet.poseData[e];
+        const frameidx = Math.floor(time * spritesheet.fps) % 3;
+        const currentCharacter = PlayerSpriteManager.sys.characterList[GameDataManager.sys.session.settings.character];
+        if (currentCharacter === "invis") return
+        this.drawScaled(PlayerSpriteManager.sys.playerSprite, spritesheet, s, i, {
+          x: pose,
+          y: spritesheet.mount[frameidx]
         }, n);
       }
       drawPlayerMenu(e, t, s = 0, i = 0, n = 1) {
@@ -8208,7 +8210,8 @@ export var Surf = {
               player6: 576,
               player7: 640,
               konami: 704,
-              linux: 768
+              linux: 768,
+              invis: 832
             }
           },
           npc: {
@@ -9205,7 +9208,7 @@ export var Surf = {
         }
         PlayerSpriteManager.sys = this;
         this.characterList = Object.keys(this.sheet.player.character);
-        this.selectionList = ["player1", "player2", "player3", "player4", "player5", "player6", "player7"];
+        this.selectionList = ["player1", "player2", "player3", "player4", "player5", "player6", "player7", "invis"];
         if (LoadTimeData.getBoolean("isLinuxTuxEnabled") === false) {
           this.characterList.forEach((id, index) => {
             if (id === "linux") {
@@ -9214,7 +9217,7 @@ export var Surf = {
           });
         }
         if (LoadTimeData.getBoolean("isLinuxTuxEnabled") === true) {
-          this.selectionList = ["linux", "player1", "player2", "player3", "player4", "player5", "player6", "player7"];
+          this.selectionList = ["linux", "player1", "player2", "player3", "player4", "player5", "player6", "player7", "invis"];
         }
       }
       createPlayerSprite() {
@@ -10951,29 +10954,29 @@ export var Surf = {
             }
         }
       }
-      changeCharacter(e, t = false) {
-        const s = PlayerSpriteManager.sys.characterList[GameDataManager.sys.session.settings.character];
-        let i;
-        let n;
-        if (t) {
-          i = PlayerSpriteManager.sys.characterList[e];
-          if (!PlayerSpriteManager.sys.selectionList.includes(i)) {
-            PlayerSpriteManager.sys.selectionList.push(i);
+      changeCharacter(newPlayer, konami = false) {
+        //# handle character change
+        const currentCharacter = PlayerSpriteManager.sys.characterList[GameDataManager.sys.session.settings.character];
+        let nextPlayerID;
+        let nextPlayerIndex;
+        const selectionList = PlayerSpriteManager.sys.selectionList;
+        if (konami) {
+          nextPlayerID = PlayerSpriteManager.sys.characterList[newPlayer];
+          if (!PlayerSpriteManager.sys.selectionList.includes(nextPlayerID)) {
+            PlayerSpriteManager.sys.selectionList.push(nextPlayerID);
           }
-          n = PlayerSpriteManager.sys.selectionList.indexOf(i);
-        }
-        const o = PlayerSpriteManager.sys.selectionList;
-        if (!t) {
-          n = (o.length + PlayerSpriteManager.sys.selectionList.indexOf(s) + e) % o.length;
-          i = PlayerSpriteManager.sys.selectionList[n];
+          nextPlayerIndex = PlayerSpriteManager.sys.selectionList.indexOf(nextPlayerID);
+        } else {
+          nextPlayerIndex = (selectionList.length + PlayerSpriteManager.sys.selectionList.indexOf(currentCharacter) + newPlayer) % selectionList.length;
+          nextPlayerID = PlayerSpriteManager.sys.selectionList[nextPlayerIndex];
         }
         this.skins.render = [];
-        const r = this.skins.zoom.length;
-        for (let e = 0; e < r; e++) {
-          const t = (o.length + n + (e - Math.floor(r / 2))) % o.length;
-          this.skins.render[e] = PlayerSpriteManager.sys.selectionList[t];
+        const zoom = this.skins.zoom.length;
+        for (let idx = 0; idx < zoom; idx++) {
+          const nextId = (selectionList.length + nextPlayerIndex + (idx - Math.floor(zoom / 2))) % selectionList.length;
+          this.skins.render[idx] = PlayerSpriteManager.sys.selectionList[nextId];
         }
-        GameDataManager.sys.session.settings.character = PlayerSpriteManager.sys.characterList.indexOf(i);
+        GameDataManager.sys.session.settings.character = PlayerSpriteManager.sys.characterList.indexOf(nextPlayerID);
         GameDataManager.sys.saveSessionSettings();
         PlayerSpriteManager.sys.createPlayerSprite();
         ControllerManager.sys.setVibration("small");
