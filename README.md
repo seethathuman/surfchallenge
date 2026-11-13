@@ -20,16 +20,28 @@ NOTE: This repository contains the previous version of edge surf before Edge 124
 
 - Speedrun mode: Disable stopping and have only 1 heart
 - Hardcore mode: Boosts, Lives, Ramps and other pickups do not spawn.
+- Invisibility mode: Invisible player
 
 ## Important Classes
 
 `SurfMain` Responsible for initing all other objects
+
 `GameDataManager` Stores game state in `this.sys.game` and `this.sys.session`
+
 `StatsWrapper` Wrapper around saving and loading stats.
+
 `CheatManager` Handles cheat inputs
+
 `ThemeManager` Stores current theme info and spritesheets
-`PlayerSpriteManager` Stores player sprite
+
+`PlayerSpriteManager` Stores player spritesheets
+
+`PlayerManager` Manages player data
+
 `RenderManager` Renders the game
+
 `MapBuilder` Builds objects in the level, handles clusters and individual objects
+
 `PhysicsManager` Processes the player crashing into objects
+
 `UIManager` Manages React UI
